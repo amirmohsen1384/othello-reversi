@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vector>
 #include <cstdint>
 #include "interfaces.h"
 
@@ -75,3 +76,5 @@ Point operator-(Point const &one, Point const &two);
 bool operator==(Point const &one, Point const &two);
 bool operator!=(Point const &one, Point const &two);
 std::ostream& operator<<(std::ostream &output, Point const& point);
+
+using PointList = std::vector<Point>;

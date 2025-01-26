@@ -3,6 +3,7 @@
 #include "navigator.h"
 #include <vector>
 #include <string>
+#include <limits>
 
 // Describes the direction of items.
 enum class Orientation {Horizontal, Vertical};

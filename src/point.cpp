@@ -1,5 +1,19 @@
 #include "point.h"
 
+Point::Point() {}
+
+Point::Point(Point const &_object)
+{
+    this->_x = _object._x;
+    this->_y = _object._y;
+}
+
+Point::Point(Unit const &_x, Unit const &_y)
+{
+    this->_x = _x;
+    this->_y = _y;
+}
+
 Point &Point::operator=(Point const &_object)
 {
     this->_x = _object._x;

@@ -74,6 +74,9 @@ State AbstractNavigator::Execute() {
     else if(_currentKey == this->GetKeyBottom()) {
         MoveBottom();
     }
+    else {
+        SetCurrentState(State::InvalidKeyPressed);
+    }
     
     return this->GetCurrentState();
 }

@@ -174,13 +174,15 @@ const Coordinate& Board::BoardRow::At(Dimension const& y) const {
     return *(_data + y * _length);
 }
 
-std::ostream& Board::ToBinary(std::ostream &stream) {
+std::ostream& Board::ToBinary(std::ostream &stream)
+{
     if(stream.write(reinterpret_cast<const char*>(&_width), sizeof(_width)).bad()) {
         return stream;
-    }
+    }    
     if(stream.write(reinterpret_cast<const char*>(&_height), sizeof(_height)).bad()) {
         return stream;
     }
+
     for(Dimension y = 0; y < _height; ++y) {
         for(Dimension x = 0; x < _width; ++x) {
             int8_t value = static_cast<int8_t>(At(x, y));
@@ -189,6 +191,7 @@ std::ostream& Board::ToBinary(std::ostream &stream) {
             }
         }
     }
+
     return stream;
 }
 
@@ -201,7 +204,14 @@ std::istream &Board::FromBinary(std::istream &stream)
         return stream;
     }
 
-    Reset(_width, _height);
+    try {
+        delete _data;
+        _data = nullptr;
+        _data = new Coordinate[_width * _height];
+    }
+    catch(std::bad_alloc const &) {
+        throw CreationException();
+    }
 
     for(Dimension y = 0; y < _height; ++y) {
         for(Dimension x = 0; x < _width; ++x) {

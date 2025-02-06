@@ -92,30 +92,28 @@ void Board::Reset(Dimension const &width, Dimension const &height)
 
 Coordinate &Board::At(Dimension const &x, Dimension const &y)
 {
-    if(x < 0 || x >= this->_width) {
+    if(!IsValid(Point(x, y))) {
         throw InvalidPointException();
     }
-    else if(y < 0 || y >= this->_height) {
-        throw InvalidPointException();
-    }
-    size_t pos = (y * this->_width) + x;
+    size_t pos = (y * _width) + x;
     return *(_data + pos);
 }
 
 const Coordinate &Board::At(Dimension const &x, Dimension const &y) const
 {
-    if(x < 0 || x >= this->_width) {
+    if(!IsValid(Point(x, y))) {
         throw InvalidPointException();
     }
-    else if(y < 0 || y >= this->_height) {
-        throw InvalidPointException();
-    }
-    size_t pos = (y * this->_width) + x;
+    size_t pos = (y * _width) + x;
     return *(_data + pos);
 }
 
 size_t Board::Occurrences(Coordinate const &target) const
 {
+    if(IsEmpty()) {
+        throw BlankBoardException();
+    }
+
     size_t result = 0;
     for(Dimension y = 0; y < _height; ++y) {
         for(Dimension x = 0; x < _width; ++x) {
@@ -124,7 +122,35 @@ size_t Board::Occurrences(Coordinate const &target) const
             }
         }
     }
+
     return result;
+}
+
+bool Board::IsValid(Point const &point) const {
+    Dimension x = point.GetX();
+    Dimension y = point.GetY();
+    if(x < 0 || x >= _width) {
+        return false;
+    }
+    else if(y < 0 || y >= _height) {
+        return false;
+    }
+    return true;
+}
+
+void Board::Inverse(Point const& point) {
+    if(!IsValid(point)) {
+        throw InvalidPointException();
+    }
+    Coordinate &value = At(point);
+    if(value == Piece::Blank) {
+        return;
+    }
+    value = (value == Piece::User) ? Piece::Opponent : Piece::User; 
+}
+
+void Board::Inverse(Dimension const& x, Dimension const& y) {
+    this->Inverse(Point(x, y));
 }
 
 Board::BoardRow &Board::BoardRow::operator=(BoardRow const &another)
@@ -188,4 +214,31 @@ std::istream &Board::FromBinary(std::istream &stream)
     }
     
     return stream;
+}
+
+bool operator==(Board const& one, Board const& two)
+{
+    if(one._width != two._width) {
+        return false;
+    }
+    else if(one._height != two._height) {
+        return false;
+    }
+    
+    const Dimension width = one._width;
+    const Dimension height = one._height;
+
+    for(Dimension y = 0; y < height; ++y) {
+        for(Dimension x = 0; x < width; ++x) {
+            if(one.At(x, y) != two.At(x, y)) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+bool operator!=(Board const& one, Board const& two)
+{
+    return !(one == two);
 }

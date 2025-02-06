@@ -55,6 +55,7 @@ protected:
     };
 
     virtual void Initialize();
+    bool IsValid(Point const &point) const;
 
 public:
     Board() {}
@@ -83,6 +84,12 @@ public:
     inline bool IsFull() const {
         return Occurrences(Piece::Blank) == 0;
     }
+    inline bool IsSquared() const {
+        return (_width == _height);
+    }
+
+    void Inverse(Point const& point);
+    void Inverse(Dimension const& x, Dimension const& y);
 
     inline BoardRow operator[](Dimension const& x) {
         return BoardRow(_data + x, _width);
@@ -94,8 +101,14 @@ public:
     virtual std::ostream& ToBinary(std::ostream &stream);
     virtual std::istream& FromBinary(std::istream &stream);
 
+    friend bool operator==(Board const& one, Board const& two);
+    friend bool operator!=(Board const& one, Board const& two);
+
 private:
     Coordinate  *_data = nullptr;
     Dimension   _height = 0;
     Dimension   _width = 0;
 };
+
+bool operator==(Board const& one, Board const& two);
+bool operator!=(Board const& one, Board const& two);

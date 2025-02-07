@@ -1,5 +1,5 @@
 #pragma once
-#include "point.h"
+#include "core/point.h"
 
 // Defines different states of a piece in the board.
 enum class Piece {User, Blank, Opponent};
@@ -40,8 +40,8 @@ protected:
 
     // Describes a row of the board.
     class BoardRow {
-        Dimension   _length = 0;
         Coordinate  *_data = nullptr;
+        Dimension   _length = 0;
 
     public:
         explicit BoardRow(Coordinate *init, Dimension const& length) : 

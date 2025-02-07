@@ -1,9 +1,9 @@
-#include "menu.h"
+#include "core/graphics.h"
+#include "core/system.h"
+#include "menu/menu.h"
 #include <sstream>
 #include <iostream>
 #include <algorithm>
-#include "system.h"
-#include "graphics.h"
 
 MenuNavigator::MenuNavigator()
 {
@@ -138,7 +138,8 @@ Index Menu::GetPosition() const
 }
 bool Menu::SetPosition(Index const &index)
 {
-    if(index >= 0 && index < this->size()) {
+    int64_t size = this->size();
+    if(index >= 0 && index < size) {
         _position = index;
         return true;
     }
@@ -209,7 +210,7 @@ void Menu::PrintMenu() const
     DrawSeperator(seperatorCount);
 
     // Starts printing the items.
-    size_t i = 0;
+    int64_t i = 0;
     for(auto s : *this) {
         if(i == _position) {
             SetForeground(Color::Green);

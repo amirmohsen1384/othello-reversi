@@ -1,6 +1,6 @@
-#include "system.h"
-#include <cstdlib>
+#include "core/system.h"
 #include <windows.h>
+#include <cstdlib>
 
 void System::EraseConsole() {
     system("cls");

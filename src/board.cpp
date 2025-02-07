@@ -27,6 +27,103 @@ void Board::Initialize()
     point.MoveTop();
 }
 
+void Board::UpdateSurroundedPieces(Point const &point, Direction const &direction)
+{
+    PointList container = GetSurroundedPieces(At(point), point, direction);
+    for(Point const& p : container) {
+        Inverse(p);
+    }
+}
+
+PointList Board::GetSurroundedPieces(Piece const &piece, Point const &point, Direction const &direction) const
+{
+    if(IsEmpty()) {
+        throw BlankBoardException();
+
+    }
+    else if(piece == Piece::Blank) {
+        throw BlankPieceException();
+
+    }
+
+    const Piece inversed = (piece == Piece::User ? Piece::Opponent : Piece::User);
+    Coordinate pointer = At(point);
+    PointList container;
+    Point temp = point;
+    
+    do {
+        switch(direction) {
+            case Direction::Top: {
+                temp.MoveTop();
+                break;
+            }
+
+            case Direction::Bottom: {
+                temp.MoveBottom();
+                break;
+            }
+
+            case Direction::Left: {
+                temp.MoveLeft();
+                break;
+            }
+
+            case Direction::Right: {
+                temp.MoveRight();
+                break;
+            }
+
+            case Direction::TopLeft: {
+                temp.MoveTopLeft();
+                break;
+            }
+
+            case Direction::TopRight: {
+                temp.MoveTopRight();
+                break;
+            }
+
+            case Direction::BottomLeft: {
+                temp.MoveBottomLeft();
+                break;
+            }
+            
+            case Direction::BottomRight: {
+                temp.MoveBottomRight();
+                break;
+            }
+        }
+
+        try {
+            pointer = At(temp);
+        }
+        catch(InvalidPointException const &) {
+            // Returns an empty list.
+            return PointList();
+        }
+
+        if(pointer == Piece::Blank) {
+            // Returns an empty list.
+            return PointList();
+        }
+        else if(pointer == inversed) {
+            container.push_back(temp);
+        }
+
+    }
+    while(pointer != piece);
+
+    return container;
+}
+
+bool Board::IsLegal(Piece const &piece, Point const &point, Direction const &direction) const
+{
+    if(At(point) == Piece::Blank) {
+        return false;
+    }
+    return (GetSurroundedPieces(piece, point, direction).size() > 0);
+}
+
 Board::Board(Board const &another) : Board()
 {
     *this = another;
@@ -90,25 +187,55 @@ void Board::Reset(Dimension const &width, Dimension const &height)
     }
 }
 
+bool Board::IsLegal(Piece const &player, Point const &position) const
+{
+    for(int i = 0; i < 8; ++i) {
+        if(IsLegal(player, position, static_cast<Direction>(i))) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void Board::UpdateSurroundedPieces(Point const &point)
+{
+    for(int i = 0; i < 8; ++i) {
+        UpdateSurroundedPieces(point, static_cast<Direction>(i));
+    }
+}
+
+PointList Board::GetLegals(Piece const &player) const
+{
+    PointList result;
+    for(int j = 0; j < _height; ++j) {
+        for(int i = 0; i < _width; ++i) {
+            Point p(i, j);
+            if(IsLegal(player, p)) {
+                result.push_back(p);
+            }
+        }
+    }
+    return result;
+}
+
 Coordinate &Board::At(Dimension const &x, Dimension const &y)
 {
-    if(!IsValid(Point(x, y))) {
+    if(!Contains(Point(x, y))) {
         throw InvalidPointException();
     }
     size_t pos = (y * _width) + x;
     return *(_data + pos);
 }
-
 const Coordinate &Board::At(Dimension const &x, Dimension const &y) const
 {
-    if(!IsValid(Point(x, y))) {
+    if(!Contains(Point(x, y))) {
         throw InvalidPointException();
     }
     size_t pos = (y * _width) + x;
     return *(_data + pos);
 }
 
-size_t Board::Occurrences(Coordinate const &target) const
+size_t Board::Occurrences(Piece const &target) const
 {
     if(IsEmpty()) {
         throw BlankBoardException();
@@ -126,7 +253,7 @@ size_t Board::Occurrences(Coordinate const &target) const
     return result;
 }
 
-bool Board::IsValid(Point const &point) const {
+bool Board::Contains(Point const &point) const {
     Dimension x = point.GetX();
     Dimension y = point.GetY();
     if(x < 0 || x >= _width) {
@@ -139,7 +266,7 @@ bool Board::IsValid(Point const &point) const {
 }
 
 void Board::Inverse(Point const& point) {
-    if(!IsValid(point)) {
+    if(!Contains(point)) {
         throw InvalidPointException();
     }
     Coordinate &value = At(point);
@@ -148,7 +275,6 @@ void Board::Inverse(Point const& point) {
     }
     value = (value == Piece::User) ? Piece::Opponent : Piece::User; 
 }
-
 void Board::Inverse(Dimension const& x, Dimension const& y) {
     this->Inverse(Point(x, y));
 }
@@ -194,7 +320,6 @@ std::ostream& Board::ToBinary(std::ostream &stream)
 
     return stream;
 }
-
 std::istream &Board::FromBinary(std::istream &stream)
 {
     if(stream.read(reinterpret_cast<char*>(&_width), sizeof(_width)).bad()) {
@@ -251,4 +376,16 @@ bool operator==(Board const& one, Board const& two)
 bool operator!=(Board const& one, Board const& two)
 {
     return !(one == two);
+}
+
+bool Board::IsEmpty() const {
+    return _data == nullptr;
+}
+
+bool Board::IsFull() const {
+    return Occurrences(Piece::Blank) == 0;
+}
+
+bool Board::IsSquared() const {
+    return (_width == _height);
 }

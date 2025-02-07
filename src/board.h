@@ -26,9 +26,19 @@ public:
     }
 };
 
+// Defines an exception to indicate unability to identify the legality of a blank piece.
+class BlankPieceException : public std::exception {
+public:
+    virtual char const* what() const noexcept override {
+        return "Attempt to pass a blank piece to identify the legality.";
+    }
+};
+
 // Defines the main board of the game.
 class Board : public ISerialize {
 protected:
+
+    // Describes a row of the board.
     class BoardRow {
         Dimension   _length = 0;
         Coordinate  *_data = nullptr;
@@ -54,8 +64,29 @@ protected:
         }
     };
 
-    virtual void Initialize();
-    bool IsValid(Point const &point) const;
+private:
+
+    // Describes different directions to be applied on the board.
+    enum class Direction {
+        TopLeft = 0,
+        Top,
+        TopRight,
+        Right,
+        BottomRight,
+        Bottom,
+        BottomLeft,
+        Left
+    };
+
+    /* Returns a list of surrounded pieces in 'point' on the board 
+     * towrards 'direction' if 'piece' gets placed in that point. */
+    PointList GetSurroundedPieces(Piece const &piece, Point const &point, Direction const &direction) const;
+
+    // Returns true if it's legal to place 'piece' in 'point' towards 'direction'. 
+    bool IsLegal(Piece const& piece, Point const& point, Direction const& direction) const;
+    
+    // Updates surrounded pieces in 'point' towards 'direction'.
+    void UpdateSurroundedPieces(Point const &point, Direction const &direction);
 
 public:
     Board() {}
@@ -67,26 +98,21 @@ public:
 
     void Reset(Dimension const& width, Dimension const& height);
 
+    bool IsLegal(Piece const& player, Point const& position) const;
+
+    void UpdateSurroundedPieces(Point const &point);
+
+    PointList GetLegals(Piece const& player) const;
+
+    size_t Occurrences(Piece const& target) const;
+
     Coordinate& At(Dimension const& x, Dimension const& y);
     const Coordinate& At(Dimension const& x, Dimension const& y) const;
-    
-    inline Coordinate& At(Point const& _point) {
-        return At(_point.GetX(), _point.GetY());
-    }
-    inline const Coordinate& At(Point const& _point) const {
-        return At(_point.GetX(), _point.GetY());
-    }
 
-    size_t Occurrences(Coordinate const& target) const;
-    inline bool IsEmpty() const {
-        return _data == nullptr;
-    }
-    inline bool IsFull() const {
-        return Occurrences(Piece::Blank) == 0;
-    }
-    inline bool IsSquared() const {
-        return (_width == _height);
-    }
+    bool IsEmpty() const;
+    bool IsFull() const;
+    bool IsSquared() const;
+    bool Contains(Point const &point) const;
 
     void Inverse(Point const& point);
     void Inverse(Dimension const& x, Dimension const& y);
@@ -97,7 +123,14 @@ public:
     inline const BoardRow operator[](Dimension const& x) const {
         return BoardRow(_data + x, _width);
     }
+    inline Coordinate& At(Point const& _point) {
+        return At(_point.GetX(), _point.GetY());
+    }
+    inline const Coordinate& At(Point const& _point) const {
+        return At(_point.GetX(), _point.GetY());
+    }
 
+    virtual void Initialize();
     virtual std::ostream& ToBinary(std::ostream &stream);
     virtual std::istream& FromBinary(std::istream &stream);
 

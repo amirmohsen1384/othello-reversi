@@ -256,10 +256,10 @@ size_t Board::Occurrences(Piece const &target) const
 bool Board::Contains(Point const &point) const {
     Dimension x = point.GetX();
     Dimension y = point.GetY();
-    if(x < 0 || x >= _width) {
+    if(x >= _width) {
         return false;
     }
-    else if(y < 0 || y >= _height) {
+    else if(y >= _height) {
         return false;
     }
     return true;
@@ -288,13 +288,13 @@ Board::BoardRow &Board::BoardRow::operator=(BoardRow const &another)
 
 Coordinate &Board::BoardRow::At(Dimension const& y)
 {
-    if(y < 0 || y >= _length) {
+    if(y >= _length) {
         throw InvalidPointException();
     }
     return *(_data + y * _length);
 }
 const Coordinate& Board::BoardRow::At(Dimension const& y) const {
-    if(y < 0 || y >= _length) {
+    if(y >= _length) {
         throw InvalidPointException();
     }
     return *(_data + y * _length);

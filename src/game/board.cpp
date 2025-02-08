@@ -6,11 +6,9 @@ void Board::Initialize()
         throw BlankBoardException();
     } 
 
-    for(Dimension j = 0; j < _size.GetHeight(); ++j) {
-        for(Dimension i = 0; i < _size.GetWidth(); ++i) {
-            this->At(i, j) = Piece::Blank;
-        }
-    }
+    START_LOOKING_OVER_BOARD(Point p, *this)
+        this->At(p) = Piece::Blank;
+    END_LOOKING_OVER_BOARD
     
     Point point = Point((_size.GetWidth() - 1) / 2, (_size.GetHeight() - 1) / 2);
     
@@ -98,12 +96,10 @@ PointList Board::GetSurroundedPieces(Piece const &piece, Point const &point, Dir
             pointer = At(temp);
         }
         catch(InvalidPointException const &) {
-            // Returns an empty list.
             return PointList();
         }
 
         if(pointer == Piece::Blank) {
-            // Returns an empty list.
             return PointList();
         }
         else if(pointer == inversed) {
@@ -148,13 +144,9 @@ Board &Board::operator=(Board const &another)
     }
 
     // Creates a copy of all pieces in the board.
-    Board &current = *this;
-    for(Dimension y = 0; y < _size.GetHeight(); ++y) {
-        for(Dimension x = 0; x < _size.GetWidth(); ++x) {
-            size_t pos = x + y * _size.GetWidth();
-            current._data[pos] = another._data[pos];
-        }
-    } 
+    START_LOOKING_OVER_BOARD(Point p, *this)
+        this->At(p) = another.At(p);
+    END_LOOKING_OVER_BOARD
 
     return *this;
 }
@@ -211,14 +203,11 @@ Size Board::GetDimensions() const
 PointList Board::GetLegals(Piece const &player) const
 {
     PointList result;
-    for(int j = 0; j < _size.GetHeight(); ++j) {
-        for(int i = 0; i < _size.GetWidth(); ++i) {
-            Point p(i, j);
-            if(IsLegal(player, p)) {
-                result.push_back(p);
-            }
+    START_LOOKING_OVER_BOARD(Point p, *this)
+        if(IsLegal(player, p)) {
+            result.push_back(p);
         }
-    }
+    END_LOOKING_OVER_BOARD
     return result;
 }
 
@@ -246,13 +235,11 @@ size_t Board::Occurrences(Piece const &target) const
     }
 
     size_t result = 0;
-    for(Dimension y = 0; y < _size.GetHeight(); ++y) {
-        for(Dimension x = 0; x < _size.GetWidth(); ++x) {
-            if(target == At(x, y)) {
-                result++;
-            }
+    START_LOOKING_OVER_BOARD(Point p, *this)
+        if(target == At(p)) {
+            result++;
         }
-    }
+    END_LOOKING_OVER_BOARD
 
     return result;
 }
@@ -309,15 +296,14 @@ std::ostream& Board::ToBinary(std::ostream &stream) const
     if(_size.ToBinary(stream).bad()) {
         return stream;
     }
-    for(Dimension y = 0; y < _size.GetHeight(); ++y) {
-        for(Dimension x = 0; x < _size.GetWidth(); ++x) {
-            int8_t value = static_cast<int8_t>(At(x, y));
-            if(stream.write(reinterpret_cast<const char*>(&value), sizeof(value)).bad()) {
-                return stream;
-            }
-        }
-    }
 
+    START_LOOKING_OVER_BOARD(Point p, *this)
+        int8_t value = static_cast<int8_t>(At(p));
+        if(stream.write(reinterpret_cast<const char*>(&value), sizeof(value)).bad()) {
+            return stream;
+        }
+    END_LOOKING_OVER_BOARD
+    
     return stream;
 }
 std::istream &Board::FromBinary(std::istream &stream)
@@ -335,16 +321,14 @@ std::istream &Board::FromBinary(std::istream &stream)
         throw CreationException();
     }
 
-    for(Dimension y = 0; y < _size.GetHeight(); ++y) {
-        for(Dimension x = 0; x < _size.GetWidth(); ++x) {
-            int8_t value = 0;
-            if(stream.read(reinterpret_cast<char*>(&value), sizeof(value)).bad()) {
-                return stream;
-            }
-            At(x, y) = static_cast<Coordinate>(value);
+    START_LOOKING_OVER_BOARD(Point p, *this)
+        int8_t value = 0;
+        if(stream.read(reinterpret_cast<char*>(&value), sizeof(value)).bad()) {
+            return stream;
         }
-    }
-    
+        At(p) = static_cast<Coordinate>(value);
+    END_LOOKING_OVER_BOARD
+
     return stream;
 }
 
@@ -357,16 +341,11 @@ bool operator==(Board const& one, Board const& two)
         return false;
     }
     
-    const Dimension width = one._size.GetWidth();
-    const Dimension height = one._size.GetHeight();
-
-    for(Dimension y = 0; y < height; ++y) {
-        for(Dimension x = 0; x < width; ++x) {
-            if(one.At(x, y) != two.At(x, y)) {
-                return false;
-            }
+    START_LOOKING_OVER_BOARD(Point p, one)
+        if(one.At(p) != two.At(p)) {
+            return false;
         }
-    }
+    END_LOOKING_OVER_BOARD
 
     return true;
 }

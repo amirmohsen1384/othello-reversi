@@ -76,7 +76,7 @@ public:
 
 public:
     static Point Transposed(Point const &point);
-    virtual std::ostream& ToBinary(std::ostream &stream) override;
+    virtual std::ostream& ToBinary(std::ostream &stream) const override;
     virtual std::istream& FromBinary(std::istream &stream) override;
 };
 

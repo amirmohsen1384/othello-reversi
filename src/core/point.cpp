@@ -187,7 +187,7 @@ std::ostream& operator<<(std::ostream &output, Point const& point)
 }
 
 using Byte = char;
-std::ostream& Point::ToBinary(std::ostream &stream)
+std::ostream& Point::ToBinary(std::ostream &stream) const
 {
     stream.write(reinterpret_cast<const Byte*>(&this->_x), sizeof(Unit));
     stream.write(reinterpret_cast<const Byte*>(&this->_y), sizeof(Unit));

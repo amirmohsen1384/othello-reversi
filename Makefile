@@ -22,11 +22,11 @@ menu.o: navigator.o src/menu/menu.cpp
 navigator.o: src/menu/navigator.cpp
 	$(CC) $(CFLAGS) -c src/menu/navigator.cpp -o navigator.o
 
-board.o: src/board.cpp
-	$(CC) $(CFLAGS) -c src/board.cpp -o board.o
+board.o: src/game/board.cpp
+	$(CC) $(CFLAGS) -c src/game/board.cpp -o board.o
 
-player.o: src/player.cpp
-	$(CC) $(CFLAGS) -c src/player.cpp -o player.o
+player.o: src/game/player.cpp
+	$(CC) $(CFLAGS) -c src/game/player.cpp -o player.o
 
 interfaces.o: src/core/interfaces.cpp
 	$(CC) $(CFLAGS) -c src/core/interfaces.cpp -o interfaces.o

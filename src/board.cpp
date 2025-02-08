@@ -1,4 +1,6 @@
 #include "board.h"
+#include <iostream>
+#include "core/graphics.h"
 
 void Board::Initialize()
 {
@@ -300,7 +302,7 @@ const Coordinate& Board::BoardRow::At(Dimension const& y) const {
     return *(_data + y * _length);
 }
 
-std::ostream& Board::ToBinary(std::ostream &stream)
+std::ostream& Board::ToBinary(std::ostream &stream) const
 {
     if(stream.write(reinterpret_cast<const char*>(&_width), sizeof(_width)).bad()) {
         return stream;
@@ -376,6 +378,36 @@ bool operator==(Board const& one, Board const& two)
 bool operator!=(Board const& one, Board const& two)
 {
     return !(one == two);
+}
+
+std::ostream &operator<<(std::ostream &stream, Board const &board)
+{
+    using namespace std;
+    if(board.IsEmpty()) {
+        throw BlankBoardException();
+    }
+    
+    for(Dimension y = 0; y < board._height; ++y) {
+        for(Dimension x = 0; x < board._width; ++x) {
+            const Coordinate &value = board.At(x, y);
+            switch(value) {
+                case Piece::Opponent: {
+                    Graphics::Draw("O", Graphics::Color::BrightRed);
+                    break;
+                }
+                case Piece::User: {
+                    Graphics::Draw("U", Graphics::Color::BrightBlue);
+                    break;
+                }
+                case Piece::Blank: {
+                    cout << 'O';
+                }
+            }
+            cout << '\t';
+        }
+        cout << '\b' << '\n' << '\n';
+    }
+    return stream;
 }
 
 bool Board::IsEmpty() const {

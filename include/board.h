@@ -131,11 +131,12 @@ public:
     }
 
     virtual void Initialize();
-    virtual std::ostream& ToBinary(std::ostream &stream);
-    virtual std::istream& FromBinary(std::istream &stream);
+    virtual std::ostream& ToBinary(std::ostream &stream) const override;
+    virtual std::istream& FromBinary(std::istream &stream) override;
 
     friend bool operator==(Board const& one, Board const& two);
     friend bool operator!=(Board const& one, Board const& two);
+    friend std::ostream& operator<<(std::ostream &stream, Board const &board);
 
 private:
     Coordinate  *_data = nullptr;
@@ -145,3 +146,4 @@ private:
 
 bool operator==(Board const& one, Board const& two);
 bool operator!=(Board const& one, Board const& two);
+std::ostream& operator<<(std::ostream &stream, Board const &board);

@@ -29,4 +29,4 @@ private:
     ScoreContainer  _score = 0;
 };
 
-using PlayerList = std::vector<PlayerList>;
+using PlayerList = std::vector<Player>;

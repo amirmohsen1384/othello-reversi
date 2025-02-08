@@ -180,12 +180,6 @@ bool operator!=(Point const &one, Point const &two)
     return !(one == two);
 }
 
-std::ostream& operator<<(std::ostream &output, Point const& point)
-{
-    output << '(' << point._x << ", " << point._y << ')';
-    return output;
-}
-
 using Byte = char;
 std::ostream& Point::ToBinary(std::ostream &stream) const
 {

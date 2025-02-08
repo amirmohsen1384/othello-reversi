@@ -120,7 +120,7 @@ PointList Board::GetSurroundedPieces(Piece const &piece, Point const &point, Dir
 
 bool Board::IsLegal(Piece const &piece, Point const &point, Direction const &direction) const
 {
-    if(At(point) == Piece::Blank) {
+    if(At(point) != Piece::Blank) {
         return false;
     }
     return (GetSurroundedPieces(piece, point, direction).size() > 0);

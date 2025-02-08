@@ -1,6 +1,4 @@
 #include "game/board.h"
-#include <iostream>
-#include "core/graphics.h"
 
 void Board::Initialize()
 {
@@ -205,6 +203,11 @@ void Board::UpdateSurroundedPieces(Point const &point)
     }
 }
 
+Size Board::GetDimensions() const
+{
+    return _size;
+}
+
 PointList Board::GetLegals(Piece const &player) const
 {
     PointList result;
@@ -372,44 +375,6 @@ bool operator!=(Board const& one, Board const& two)
     return !(one == two);
 }
 
-std::ostream &operator<<(std::ostream &stream, Board const &board)
-{
-    using namespace std;
-    if(board.IsEmpty()) {
-        throw BlankBoardException();
-    }
-    
-    for(Dimension y = 0; y < board._size.GetHeight(); ++y) {
-        for(Dimension x = 0; x < board._size.GetWidth(); ++x) {
-            const Coordinate &value = board.At(x, y);
-            switch(value) {
-                case Piece::Opponent: {
-                    Graphics::Draw("O", Graphics::Color::BrightRed);
-                    break;
-                }
-                case Piece::User: {
-                    Graphics::Draw("U", Graphics::Color::BrightBlue);
-                    break;
-                }
-                case Piece::Blank: {
-                    cout << 'O';
-                }
-            }
-            cout << '\t';
-        }
-        cout << '\b' << '\n' << '\n';
-    }
-    return stream;
-}
-
 bool Board::IsEmpty() const {
     return _data == nullptr;
-}
-
-bool Board::IsFull() const {
-    return Occurrences(Piece::Blank) == 0;
-}
-
-bool Board::IsSquared() const {
-    return (_size.GetWidth() == _size.GetHeight());
 }

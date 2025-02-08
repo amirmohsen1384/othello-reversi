@@ -100,6 +100,8 @@ public:
 
     void UpdateSurroundedPieces(Point const &point);
 
+    Size GetDimensions() const;
+
     PointList GetLegals(Piece const& player) const;
 
     size_t Occurrences(Piece const& target) const;
@@ -108,8 +110,6 @@ public:
     const Coordinate& At(Dimension const& x, Dimension const& y) const;
 
     bool IsEmpty() const;
-    bool IsFull() const;
-    bool IsSquared() const;
     bool Contains(Point const &point) const;
 
     void Inverse(Point const& point);

@@ -27,7 +27,15 @@ public:
     virtual std::ostream& ToBinary(std::ostream &stream) const override;
     virtual std::istream& FromBinary(std::istream &stream) override;
 
+    friend std::ostream& operator<<(std::ostream &output, Size const &size);
+    friend bool operator==(Size const& one, Size const& two);
+    friend bool operator!=(Size const& one, Size const& two);
+
 private:
     Dimension _width = 0;
     Dimension _height = 0;
 };
+
+std::ostream& operator<<(std::ostream &output, Size const &size);
+bool operator==(Size const& one, Size const& two);
+bool operator!=(Size const& one, Size const& two);

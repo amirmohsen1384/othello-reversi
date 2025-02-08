@@ -4,7 +4,7 @@ APP=reversi.exe
 
 all=main
 
-main: graphics.o menu.o point.o board.o player.o interfaces.o match.o size.o
+main: graphics.o menu.o point.o board.o player.o interfaces.o size.o
 	$(CC) $(CFLAGS) -o $(APP) main.cpp *.o 
 
 system.o: src/core/system.cpp

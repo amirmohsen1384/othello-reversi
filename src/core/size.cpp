@@ -74,3 +74,12 @@ std::istream &Size::FromBinary(std::istream &stream)
     }
     return stream;
 }
+
+bool operator==(Size const& one, Size const& two)
+{
+    return (one._width == two._width) && (one._height == two._height);
+}
+bool operator!=(Size const& one, Size const& two)
+{
+    return !(one == two);
+}

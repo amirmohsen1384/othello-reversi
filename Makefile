@@ -4,7 +4,7 @@ APP=reversi.exe
 
 all=main
 
-main: graphics.o menu.o point.o board.o
+main: graphics.o menu.o point.o board.o player.o interfaces.o
 	$(CC) $(CFLAGS) -o $(APP) main.cpp *.o 
 
 system.o: src/core/system.cpp
@@ -24,6 +24,12 @@ navigator.o: src/menu/navigator.cpp
 
 board.o: src/board.cpp
 	$(CC) $(CFLAGS) -c src/board.cpp -o board.o
+
+player.o: src/player.cpp
+	$(CC) $(CFLAGS) -c src/player.cpp -o player.o
+
+interfaces.o: src/core/interfaces.cpp
+	$(CC) $(CFLAGS) -c src/core/interfaces.cpp -o interfaces.o
 
 clean:
 	@rm *.o

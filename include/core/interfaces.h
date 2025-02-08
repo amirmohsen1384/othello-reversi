@@ -11,3 +11,16 @@ public:
     static std::ostream& WriteString(std::ostream &stream, std::string const &string);
     static std::istream& ReadString(std::istream &stram, std::string &string);
 };
+
+#define START_LOOKING_OVER_BOARD(Position, Board) \
+    { \
+        Size _size = (##Board##).GetDimensions(); \
+        for(Dimension _j = 0; _j < _size.GetHeight(); ++_j) { \
+            for(Dimension _i = 0; _i < _size.GetWidth(); ++_i) { \
+                Position = Point(_i, _j);
+
+
+#define END_LOOKING_OVER_BOARD \
+            } \
+        } \
+    }

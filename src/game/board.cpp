@@ -8,13 +8,13 @@ void Board::Initialize()
         throw BlankBoardException();
     } 
 
-    for(Dimension j = 0; j < _height; ++j) {
-        for(Dimension i = 0; i < _width; ++i) {
+    for(Dimension j = 0; j < _size.GetHeight(); ++j) {
+        for(Dimension i = 0; i < _size.GetWidth(); ++i) {
             this->At(i, j) = Piece::Blank;
         }
     }
     
-    Point point = Point((_width - 1) / 2, (_height - 1) / 2);
+    Point point = Point((_size.GetWidth() - 1) / 2, (_size.GetHeight() - 1) / 2);
     
     At(point) = Piece::User;
     point.MoveRight();
@@ -143,7 +143,7 @@ Board &Board::operator=(Board const &another)
 
     // Creates a new one.
     try {
-        _data = new Coordinate[another._width * another._height];
+        _data = new Coordinate[another._size.GetWidth() * another._size.GetHeight()];
     }
     catch(std::bad_alloc const&) {
         throw CreationException();
@@ -151,9 +151,9 @@ Board &Board::operator=(Board const &another)
 
     // Creates a copy of all pieces in the board.
     Board &current = *this;
-    for(Dimension y = 0; y < _height; ++y) {
-        for(Dimension x = 0; x < _width; ++x) {
-            size_t pos = x + y * _width;
+    for(Dimension y = 0; y < _size.GetHeight(); ++y) {
+        for(Dimension x = 0; x < _size.GetWidth(); ++x) {
+            size_t pos = x + y * _size.GetWidth();
             current._data[pos] = another._data[pos];
         }
     } 
@@ -164,9 +164,8 @@ Board &Board::operator=(Board const &another)
 Board::~Board()
 {
     delete this->_data;
+    this->_size.Reset();
     this->_data = nullptr;
-    this->_height = 0;
-    this->_width = 0;
 }
 
 void Board::Reset(Dimension const &width, Dimension const &height)
@@ -178,8 +177,8 @@ void Board::Reset(Dimension const &width, Dimension const &height)
     // Creates a new one.
     try {
         _data = new Coordinate[width * height];
-        this->_height = height;
-        this->_width = width;
+        this->_size.SetHeight(height);
+        this->_size.SetWidth(width);
 
         // Initializes the new board.
         this->Initialize();
@@ -209,8 +208,8 @@ void Board::UpdateSurroundedPieces(Point const &point)
 PointList Board::GetLegals(Piece const &player) const
 {
     PointList result;
-    for(int j = 0; j < _height; ++j) {
-        for(int i = 0; i < _width; ++i) {
+    for(int j = 0; j < _size.GetHeight(); ++j) {
+        for(int i = 0; i < _size.GetWidth(); ++i) {
             Point p(i, j);
             if(IsLegal(player, p)) {
                 result.push_back(p);
@@ -225,7 +224,7 @@ Coordinate &Board::At(Dimension const &x, Dimension const &y)
     if(!Contains(Point(x, y))) {
         throw InvalidPointException();
     }
-    size_t pos = (y * _width) + x;
+    size_t pos = (y * _size.GetWidth()) + x;
     return *(_data + pos);
 }
 const Coordinate &Board::At(Dimension const &x, Dimension const &y) const
@@ -233,7 +232,7 @@ const Coordinate &Board::At(Dimension const &x, Dimension const &y) const
     if(!Contains(Point(x, y))) {
         throw InvalidPointException();
     }
-    size_t pos = (y * _width) + x;
+    size_t pos = (y * _size.GetWidth()) + x;
     return *(_data + pos);
 }
 
@@ -244,8 +243,8 @@ size_t Board::Occurrences(Piece const &target) const
     }
 
     size_t result = 0;
-    for(Dimension y = 0; y < _height; ++y) {
-        for(Dimension x = 0; x < _width; ++x) {
+    for(Dimension y = 0; y < _size.GetHeight(); ++y) {
+        for(Dimension x = 0; x < _size.GetWidth(); ++x) {
             if(target == At(x, y)) {
                 result++;
             }
@@ -258,10 +257,10 @@ size_t Board::Occurrences(Piece const &target) const
 bool Board::Contains(Point const &point) const {
     Dimension x = point.GetX();
     Dimension y = point.GetY();
-    if(x >= _width) {
+    if(x >= _size.GetWidth()) {
         return false;
     }
-    else if(y >= _height) {
+    else if(y >= _size.GetHeight()) {
         return false;
     }
     return true;
@@ -304,15 +303,11 @@ const Coordinate& Board::BoardRow::At(Dimension const& y) const {
 
 std::ostream& Board::ToBinary(std::ostream &stream) const
 {
-    if(stream.write(reinterpret_cast<const char*>(&_width), sizeof(_width)).bad()) {
-        return stream;
-    }    
-    if(stream.write(reinterpret_cast<const char*>(&_height), sizeof(_height)).bad()) {
+    if(_size.ToBinary(stream).bad()) {
         return stream;
     }
-
-    for(Dimension y = 0; y < _height; ++y) {
-        for(Dimension x = 0; x < _width; ++x) {
+    for(Dimension y = 0; y < _size.GetHeight(); ++y) {
+        for(Dimension x = 0; x < _size.GetWidth(); ++x) {
             int8_t value = static_cast<int8_t>(At(x, y));
             if(stream.write(reinterpret_cast<const char*>(&value), sizeof(value)).bad()) {
                 return stream;
@@ -324,24 +319,21 @@ std::ostream& Board::ToBinary(std::ostream &stream) const
 }
 std::istream &Board::FromBinary(std::istream &stream)
 {
-    if(stream.read(reinterpret_cast<char*>(&_width), sizeof(_width)).bad()) {
+    if(_size.FromBinary(stream).bad()) {
         return stream;
     }
-    if(stream.read(reinterpret_cast<char*>(&_height), sizeof(_height)).bad()) {
-        return stream;
-    }
-
+    
     try {
         delete _data;
         _data = nullptr;
-        _data = new Coordinate[_width * _height];
+        _data = new Coordinate[_size.GetWidth() * _size.GetHeight()];
     }
     catch(std::bad_alloc const &) {
         throw CreationException();
     }
 
-    for(Dimension y = 0; y < _height; ++y) {
-        for(Dimension x = 0; x < _width; ++x) {
+    for(Dimension y = 0; y < _size.GetHeight(); ++y) {
+        for(Dimension x = 0; x < _size.GetWidth(); ++x) {
             int8_t value = 0;
             if(stream.read(reinterpret_cast<char*>(&value), sizeof(value)).bad()) {
                 return stream;
@@ -355,15 +347,15 @@ std::istream &Board::FromBinary(std::istream &stream)
 
 bool operator==(Board const& one, Board const& two)
 {
-    if(one._width != two._width) {
+    if(one._size.GetWidth() != two._size.GetWidth()) {
         return false;
     }
-    else if(one._height != two._height) {
+    else if(one._size.GetHeight() != two._size.GetHeight()) {
         return false;
     }
     
-    const Dimension width = one._width;
-    const Dimension height = one._height;
+    const Dimension width = one._size.GetWidth();
+    const Dimension height = one._size.GetHeight();
 
     for(Dimension y = 0; y < height; ++y) {
         for(Dimension x = 0; x < width; ++x) {
@@ -387,8 +379,8 @@ std::ostream &operator<<(std::ostream &stream, Board const &board)
         throw BlankBoardException();
     }
     
-    for(Dimension y = 0; y < board._height; ++y) {
-        for(Dimension x = 0; x < board._width; ++x) {
+    for(Dimension y = 0; y < board._size.GetHeight(); ++y) {
+        for(Dimension x = 0; x < board._size.GetWidth(); ++x) {
             const Coordinate &value = board.At(x, y);
             switch(value) {
                 case Piece::Opponent: {
@@ -419,5 +411,5 @@ bool Board::IsFull() const {
 }
 
 bool Board::IsSquared() const {
-    return (_width == _height);
+    return (_size.GetWidth() == _size.GetHeight());
 }

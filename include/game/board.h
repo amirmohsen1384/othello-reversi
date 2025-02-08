@@ -1,14 +1,12 @@
 #pragma once
 #include "core/point.h"
+#include "core/size.h"
 
 // Defines different states of a piece in the board.
 enum class Piece {User, Blank, Opponent};
 
 // Defines each cell on the board as a coordinate.
 using Coordinate = Piece;
-
-// Defines the dimensions of the board.
-using Dimension = uint8_t;
 
 // Defines an exception to indicate an allocation failure.
 class CreationException : public std::bad_alloc {
@@ -118,10 +116,10 @@ public:
     void Inverse(Dimension const& x, Dimension const& y);
 
     inline BoardRow operator[](Dimension const& x) {
-        return BoardRow(_data + x, _width);
+        return BoardRow(_data + x, _size.GetWidth());
     }
     inline const BoardRow operator[](Dimension const& x) const {
-        return BoardRow(_data + x, _width);
+        return BoardRow(_data + x, _size.GetWidth());
     }
     inline Coordinate& At(Point const& _point) {
         return At(_point.GetX(), _point.GetY());
@@ -140,8 +138,7 @@ public:
 
 private:
     Coordinate  *_data = nullptr;
-    Dimension   _height = 0;
-    Dimension   _width = 0;
+    Size _size = Size(0, 0);
 };
 
 bool operator==(Board const& one, Board const& two);

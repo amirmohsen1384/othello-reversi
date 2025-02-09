@@ -141,11 +141,11 @@ size_t Player::Print(PlayerList const &players)
         Draw(p.GetName(), Color::BrightMagenta);
 
         const size_t gap = length - p.GetName().size();
-        for(auto i = 0; i < gap; ++i) {
+        for(size_t i = 0; i < gap; ++i) {
             cout << ' ';
         }
 
-        for(auto i = 0; i < tab; ++i) {
+        for(size_t i = 0; i < tab; ++i) {
             cout << ' ';
         }
 

@@ -7,6 +7,9 @@
 
 using ScoreContainer = std::uint64_t;
 
+class Player;
+using PlayerList = std::vector<Player>;
+
 class Player : public ISerialize {
 public:
     Player();
@@ -34,8 +37,6 @@ private:
     std::string     _name;
     ScoreContainer  _score = 0;
 };
-
-using PlayerList = std::vector<Player>;
 
 bool operator==(Player const &one, Player const &two);
 bool operator!=(Player const &one, Player const &two);

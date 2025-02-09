@@ -184,24 +184,12 @@ void Match::PutPiece(const Point &point)
     UpdateState();
 }
 
-std::string Match::GetUserName() const
-{
-    return _user.GetName();
+Player Match::GetUser() const {
+    return _user;
 }
 
-ScoreContainer Match::GetUserScore() const
-{
-    return _user.GetScore();
-}
-
-std::string Match::GetOpponentName() const
-{
-    return _opponent.GetName();
-}
-
-ScoreContainer Match::GetOpponentScore() const
-{
-    return _opponent.GetScore();
+Player Match::GetOpponent() const {
+    return _opponent;
 }
 
 void Match::SetUserName(std::string const &value)

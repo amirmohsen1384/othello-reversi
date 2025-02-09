@@ -4,13 +4,6 @@
 #include "player.h"
 #include <exception>
 
-class IllegalPointException : public std::exception {
-public:
-    virtual const char* what() const noexcept override {
-        return "The selected point is not legal!";
-    }
-};
-
 // Describes the current turn in the match.
 using TurnInfo = Piece;
 
@@ -49,11 +42,8 @@ public:
     
     void PutPiece(const Point &point);
 
-    std::string GetUserName() const;
-    ScoreContainer GetUserScore() const;
-
-    std::string GetOpponentName() const;
-    ScoreContainer GetOpponentScore() const;
+    Player GetUser() const;
+    Player GetOpponent() const;
 
     void SetUserName(std::string const &value);
     void SetOpponentName(std::string const &value);

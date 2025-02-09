@@ -4,7 +4,7 @@ APP=reversi.exe
 
 all=main
 
-main: graphics.o menu.o point.o board.o player.o general.o size.o match.o view_game.o view_core.o
+main: graphics.o menu.o point.o board.o player.o general.o size.o match.o view_game.o view_core.o game.o
 	$(CC) $(CFLAGS) -o $(APP) main.cpp *.o 
 
 match.o: src/game/match.cpp
@@ -43,6 +43,8 @@ view_game.o: src/game/view.cpp
 view_core.o: src/core/view.cpp
 	$(CC) $(CFLAGS) -c src/core/view.cpp -o view_core.o
 	
+game.o: src/game/game.cpp
+	$(CC) $(CFLAGS) -c src/game/game.cpp -o game.o
+	
 clean:
 	@rm *.o
-	@rm $(APP)

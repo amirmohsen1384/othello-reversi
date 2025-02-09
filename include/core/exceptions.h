@@ -33,3 +33,43 @@ public:
         return "Attempt to pass a blank piece to identify the legality.";
     }
 };
+
+// Defines an exception to indicate that a specific file was not found.
+class FileNotFoundException : public std::exception {
+public:
+    virtual char const* what() const noexcept override {
+        return "The file was not available, or failed to create the file.";
+    }
+};
+
+// Defines an exception to indicate a failure to write to a file.
+class FileWritingException : public std::exception {
+public:
+    virtual char const* what() const noexcept override {
+        return "Failed to write to the file.";
+    }
+};
+
+// Defines an exception to indicate a failure to read from a file.
+class FileReadingException : public std::exception {
+public:
+    virtual char const* what() const noexcept override {
+        return "Failed to read from the file.";
+    }
+};
+
+// Defines an exception to indicate an invaild file.
+class InvalidFileException : public std::exception {
+public:
+    virtual char const* what() const noexcept override {
+        return "The file is in a supported format.";
+    }
+};
+
+// Defines an exception to indicate an illegal point.
+class IllegalPointException : public std::exception {
+public:
+    virtual const char* what() const noexcept override {
+        return "The selected point is not legal!";
+    }
+};    

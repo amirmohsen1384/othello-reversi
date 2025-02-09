@@ -1,6 +1,6 @@
 #pragma once
 
-#include "interfaces.h"
+#include "general.h"
 #include <cstdint>
 
 // Defines the dimensions of the board.

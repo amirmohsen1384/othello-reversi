@@ -26,3 +26,5 @@ namespace General {
     std::ostream& WriteString(std::ostream &stream, std::string const &string);
     std::istream& ReadString(std::istream &stram, std::string &string);
 }
+
+#include "exceptions.h"

@@ -3,17 +3,9 @@
 #include <vector>
 #include <cstdint>
 #include <exception>
-#include "interfaces.h"
+#include "general.h"
 
 using Unit = int64_t;
-
-// Defines an invalid position exception.
-class InvalidPointException : public std::exception {
-public:
-    virtual char const* what() const noexcept override {
-        return "The point is not available.";
-    }
-};
 
 // Defines the core functionality of a point.
 class Point : public ISerialize

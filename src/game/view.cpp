@@ -1,9 +1,8 @@
 #include "core/graphics.h"
 #include "game/match.h"
-#include <sstream>
-#include <iostream>
+#include "game/game.h"
 #include <algorithm>
-
+#include <iostream>
 
 void Match::PrintPanel() const {
     using namespace std;
@@ -119,4 +118,79 @@ std::ostream& operator<<(std::ostream &stream, Match const &target)
     }
     stream << endl;
     return stream;
+}
+
+size_t Player::Print(PlayerList const &players)
+{
+    using namespace Graphics;
+    using namespace std;
+
+    auto result = std::max_element(players.cbegin(), players.cend(), 
+        [](Player const &one, Player const &two) { 
+            return one._name > two._name;
+        });
+
+    if(result == players.end()) {
+        return 0;
+    }
+
+    const size_t tab = 8;
+    const size_t length = result->GetName().size();
+
+    for(const Player &p : players) {
+        Draw(p.GetName(), Color::BrightMagenta);
+
+        const size_t gap = length - p.GetName().size();
+        for(auto i = 0; i < gap; ++i) {
+            cout << ' ';
+        }
+
+        for(auto i = 0; i < tab; ++i) {
+            cout << ' ';
+        }
+
+        cout << p.GetScore() << '\n';
+    }
+
+    return length;
+}
+
+std::ostream& operator<<(std::ostream &output, Player const &target)
+{
+    output << "Name:"   << ' ' << target.GetName()  << std::endl;
+    output << "Score:"  << ' ' << target.GetScore() << std::endl;
+    return output;
+}
+
+void Reversi::Narrate(Match const &match)
+{
+    using namespace std;
+    using namespace Graphics;
+    
+    Player::Print({match.GetUser(), match.GetOpponent()});
+    for(auto i = 0; i < 32; ++i) {
+        cout << '=';
+    }
+    cout << endl;
+
+    switch(match.GetState()) {
+        case Match::State::UserWon: {
+            Draw(match.GetUser().GetName(), static_cast<Color>(Action::User));
+            cout << ':' << ' ' << "You won the game!" << endl;
+            break;
+        }
+        case Match::State::OpponentWon: {
+            Draw(match.GetOpponent().GetName(), static_cast<Color>(Action::Opponent));
+            cout << ':' << ' ' << "You won the game!" << endl;
+            break;
+        }
+        case Match::State::GameDraw: {
+            cout << "Game Draw! Nobody won in this match!" << endl;
+            break;
+        }
+        case Match::State::Unspecified: {
+            cout << "The match is unfinished." << endl;
+            break;
+        }
+    }
 }

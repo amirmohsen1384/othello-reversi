@@ -29,10 +29,10 @@ namespace Graphics {
 
     // Describes some pre-defined colors for certain purposes.
     enum class Action {
-        Blank = Color::Gray,
-        User = Color::BrightBlue,
-        Opponent = Color::BrightRed,
-        Legal = Color::BrightMagenta
+        Blank =     static_cast<int>(Color::Gray),
+        User =      static_cast<int>(Color::BrightBlue),
+        Opponent =  static_cast<int>(Color::BrightRed),
+        Legal =     static_cast<int>(Color::BrightMagenta)
     };
     
 }

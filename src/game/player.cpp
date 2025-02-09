@@ -38,7 +38,7 @@ void Player::SetScore(std::uint64_t const &value)
 
 std::istream &Player::FromBinary(std::istream &stream)
 {
-    if(ReadString(stream, _name).bad()) {
+    if(General::ReadString(stream, _name).bad()) {
         return stream;
     }
     if(stream.read(reinterpret_cast<char*>(&_score), sizeof(_score)).bad()) {
@@ -49,11 +49,27 @@ std::istream &Player::FromBinary(std::istream &stream)
 
 std::ostream &Player::ToBinary(std::ostream &stream) const
 {
-    if(WriteString(stream, _name).bad()) {
+    if(General::WriteString(stream, _name).bad()) {
         return stream;
     }
     if(stream.write(reinterpret_cast<const char*>(&_score), sizeof(_score)).bad()) {
         return stream;
     }
     return stream;
+}
+
+bool operator==(Player const &one, Player const &two)
+{
+    if(one._name != two._name) {
+        return false;
+    }
+    else if(one._score != two._score) {
+        return false;
+    }
+    return true;
+}
+
+bool operator!=(Player const &one, Player const &two)
+{
+    return !(one == two);
 }

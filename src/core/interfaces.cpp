@@ -1,6 +1,6 @@
 #include "core/interfaces.h"
 
-std::ostream& ISerialize::WriteString(std::ostream &stream, std::string const &string) {
+std::ostream& General::WriteString(std::ostream &stream, std::string const &string) {
     // Writes the size of the string.
     const size_t size = string.size();
     if(stream.write(reinterpret_cast<const char*>(&size), sizeof(size)).bad()) {
@@ -15,7 +15,7 @@ std::ostream& ISerialize::WriteString(std::ostream &stream, std::string const &s
     return stream;
 }
 
-std::istream& ISerialize::ReadString(std::istream &stream, std::string &string) {
+std::istream& General::ReadString(std::istream &stream, std::string &string) {
     // Reads the size of the string.
     size_t size = 0;
     if(stream.read(reinterpret_cast<char*>(&size), sizeof(size)).bad()) {

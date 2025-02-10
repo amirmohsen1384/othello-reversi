@@ -1,6 +1,6 @@
 #pragma once
-#include "core/point.h"
-#include "core/size.h"
+#include "include/core/point.h"
+#include "include/core/size.h"
 
 // Defines different states of a piece in the board.
 enum class Piece {User, Blank, Opponent};

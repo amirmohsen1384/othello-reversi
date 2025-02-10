@@ -1,4 +1,4 @@
-#include "game/game.h"
+#include "include/game/game.h"
 #include <fstream>
 
 using Magic = uint64_t;

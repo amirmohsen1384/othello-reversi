@@ -1,6 +1,6 @@
-#include "core/graphics.h"
-#include "game/match.h"
-#include "game/game.h"
+#include "include/core/graphics.h"
+#include "include/game/match.h"
+#include "include/game/game.h"
 #include <algorithm>
 #include <iostream>
 

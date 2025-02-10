@@ -1,4 +1,4 @@
-#include "game/board.h"
+#include "include/game/board.h"
 
 void Board::Initialize()
 {

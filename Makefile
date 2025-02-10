@@ -1,5 +1,5 @@
 CC=x86_64-w64-mingw32-g++
-CFLAGS= -Wall -Wextra -std=c++17 -I"$(shell cygpath -m "$(CURDIR)/include")"
+CFLAGS= -Wall -Wextra -std=c++17 -I"$(shell cygpath -m "$(CURDIR)")"
 APP=reversi.exe
 
 all=main

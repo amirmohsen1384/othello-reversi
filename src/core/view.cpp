@@ -1,6 +1,6 @@
-#include "core/graphics.h"
-#include "core/point.h"
-#include "core/size.h"
+#include "include/core/graphics.h"
+#include "include/core/point.h"
+#include "include/core/size.h"
 
 std::ostream& operator<<(std::ostream &output, Point const& point)
 {

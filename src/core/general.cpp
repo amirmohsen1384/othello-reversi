@@ -1,4 +1,4 @@
-#include "core/general.h"
+#include "include/core/general.h"
 
 std::ostream& General::WriteString(std::ostream &stream, std::string const &string) {
     // Writes the size of the string.

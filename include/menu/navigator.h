@@ -1,5 +1,5 @@
 #pragma once
-#include "core/system.h"
+#include "include/core/system.h"
 
 // Describes different states of a single navigator
 enum class State {

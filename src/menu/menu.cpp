@@ -1,6 +1,6 @@
-#include "core/graphics.h"
-#include "core/system.h"
-#include "menu/menu.h"
+#include "include/core/graphics.h"
+#include "include/core/system.h"
+#include "include/menu/menu.h"
 #include <sstream>
 #include <iostream>
 #include <algorithm>

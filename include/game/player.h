@@ -1,9 +1,9 @@
 #pragma once
 
+#include "include/core/general.h"
 #include <string>
 #include <vector>
 #include <cstdint>
-#include "core/general.h"
 
 using ScoreContainer = std::uint64_t;
 

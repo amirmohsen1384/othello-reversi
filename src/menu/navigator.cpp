@@ -1,4 +1,4 @@
-#include "menu/navigator.h"
+#include "include/menu/navigator.h"
 #include <windows.h>
 
 System::KeyNumber AbstractNavigator::GetKeyBottom() const {

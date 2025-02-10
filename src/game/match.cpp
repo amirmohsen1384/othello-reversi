@@ -24,35 +24,40 @@ void Match::UpdateScores()
     _opponent.SetScore(_panel.Occurrences(Piece::Opponent));
 }
 
-Match::Match() {}
+Match::Match(Type const &type)
+{
+    _type = type;
+}
 
-Match::Match(Match const &match) : Match()
+Match::Match(Match const &match)
 {
     *this = match;
 }
 
-Match::Match(TurnInfo const &turn) : Match()
+Match::Match(TurnInfo const &turn, Type const &type) : Match(type)
 {
     _turn = turn;
 }
 
-Match::Match(Player const &user, Player const &opponent) : Match()
+Match::Match(Player const &user, Player const &opponent, Type const &type) : Match(type)
 {
     _user = user;
     _opponent = opponent;
 }
 
-Match::Match(Dimension const &width, Dimension const &height) : Match()
+Match::Match(Dimension const &width, Dimension const &height, Type const &type) : Match(type)
 {
     this->ResizePanel(width, height);
 }
 
-Match::Match(Player const &user, Player const &opponent, TurnInfo const &turn) : Match(user, opponent)
+Match::Match(Player const &user, Player const &opponent, TurnInfo const &turn, Type const &type) : Match(user, opponent, type)
 {
     _turn = turn;
 }
 
-Match::Match(Dimension const &width, Dimension const &height, Player const &user, Player const &opponent, TurnInfo const &turn) : Match()
+Match::Match(Dimension const &width, Dimension const &height, 
+    Player const &user, Player const &opponent, 
+    TurnInfo const &turn, Type const &type) : Match(type)
 {
     this->ResizePanel(width, height);
     _opponent = opponent;
@@ -127,6 +132,11 @@ std::ostream &Match::ToBinary(std::ostream &stream) const
         return stream;
     }
 
+    auto type = static_cast<int8_t>(_type);
+    if(stream.write(reinterpret_cast<const char*>(&type), sizeof(type))) {
+        return stream;
+    }
+
     return stream;
 }
 
@@ -156,6 +166,12 @@ std::istream &Match::FromBinary(std::istream &stream)
     }
     _turn = static_cast<TurnInfo>(turn);
 
+    auto type = static_cast<int8_t>(0);
+    if(stream.read(reinterpret_cast<char*>(&type), sizeof(type))) {
+        return stream;
+    }
+    _type = static_cast<Type>(type);
+    
     return stream;
 }
 
@@ -205,6 +221,11 @@ void Match::SetOpponentName(std::string const &value)
 Match::State Match::GetState() const
 {
     return _state;
+}
+
+Match::Type Match::GetType() const
+{
+    return _type;
 }
 
 void Match::ResizePanel(Dimension const &width, Dimension const &height)

@@ -16,6 +16,7 @@ public:
         GameDraw,
         UserWon
     };
+    enum class Type {SinglePlayer = 0, DoublePlayer};
 
 private:
     void PrintPanel() const;
@@ -23,13 +24,13 @@ private:
     void UpdateScores();
 
 public:
-    Match();
     Match(Match const &match);
-    Match(TurnInfo const &turn);
-    Match(Player const &user, Player const &opponent);
-    Match(Dimension const &width, Dimension const &height);
-    Match(Player const &user, Player const &opponent, TurnInfo const &turn);
-    Match(Dimension const &width, Dimension const &height, Player const &user, Player const &opponent, TurnInfo const &turn);
+    Match(Type const &type = Type::DoublePlayer);
+    Match(TurnInfo const &turn, Type const &type = Type::DoublePlayer);
+    Match(Player const &user, Player const &opponent, Type const &type = Type::DoublePlayer);
+    Match(Dimension const &width, Dimension const &height, Type const &type = Type::DoublePlayer);
+    Match(Player const &user, Player const &opponent, TurnInfo const &turn, Type const &type = Type::DoublePlayer);
+    Match(Dimension const &width, Dimension const &height, Player const &user, Player const &opponent, TurnInfo const &turn, Type const &type = Type::DoublePlayer);
 
     Match& operator=(Match const &match);
     Match& operator!();
@@ -49,6 +50,7 @@ public:
     void SetOpponentName(std::string const &value);
 
     Match::State GetState() const;
+    Match::Type GetType() const;
 
     void ResizePanel(Dimension const &width, Dimension const &height);
     void ResizePanel(Size const &size);
@@ -67,6 +69,7 @@ private:
     Player          _user;
     Player          _opponent;
     TurnInfo        _turn = Piece::User;
+    Match::Type     _type = Type::DoublePlayer;
     Match::State    _state = State::Unspecified;
 };
 

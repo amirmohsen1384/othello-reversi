@@ -73,3 +73,11 @@ public:
         return "The selected point is not legal!";
     }
 };    
+
+// Defines an exception to indicate an empty string.
+class EmptyStringException : public std::exception {
+public:
+    virtual const char* what() const noexcept override {
+        return "The entered string is empty.";
+    }
+};

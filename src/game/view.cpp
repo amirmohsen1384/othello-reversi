@@ -1,6 +1,7 @@
 #include "include/core/graphics.h"
 #include "include/game/match.h"
 #include "include/game/game.h"
+#include "include/menu/menu.h"
 #include <algorithm>
 #include <iostream>
 
@@ -192,5 +193,85 @@ void Reversi::Narrate(Match const &match)
             cout << "The match is unfinished." << endl;
             break;
         }
+    }
+}
+
+std::string GetName(std::string const &message) {
+    std::string name;
+    using namespace std;
+    using namespace Graphics;
+    while(true) {
+        try {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            Draw(message, Color::Green);
+            getline(cin, name);
+            if(name.empty()) {
+                System::EraseConsole();
+                throw EmptyStringException();
+            }
+            break;
+        }
+        catch(EmptyStringException const &exception) {
+            Draw("The player's name should entered.\n", Color::Red);
+        }
+    }
+    return name;
+}
+
+void Reversi::Initialize(Match &match)
+{
+    using namespace std;
+    using namespace Graphics;
+
+    switch(match.GetType()) {
+        case Match::Type::SinglePlayer: {
+            std::string name = GetName("Enter your name: ");
+            System::EraseConsole();
+            match.SetUserName(name);
+            match.SetOpponentName("Computer");
+            break;
+        }
+        case Match::Type::DoublePlayer: {
+            std::string user = GetName("Enter the name of player 1: ");
+            System::EraseConsole();
+
+            std::string opponent = GetName("Enter the name of player 2: ");
+            System::EraseConsole();
+
+            match.SetOpponentName(opponent);
+            match.SetUserName(user);
+            break;
+        }
+    }
+
+    Menu sizeMenu;
+    sizeMenu.SetTitle("Select one of the following dimensions to start:");
+    sizeMenu.SetOrientation(Orientation::Horizontal);
+    sizeMenu.push_back("6 x 6");
+    sizeMenu.push_back("8 x 8");
+    sizeMenu.push_back("10 x 10");
+    auto index = sizeMenu.Execute();
+    switch(index) {
+        case 0: {
+            match.ResizePanel(Size(6, 6));
+            break;
+        }
+        case 1: {
+            match.ResizePanel(Size(8, 8));
+            break;
+        }
+        case 2: {
+            match.ResizePanel(Size(10, 10));
+            break;
+        }
+    }
+
+    Menu turnMenu;
+    turnMenu.SetTitle("Who wants to go first in this match:");
+    turnMenu.SetOrientation(Orientation::Vertical);
+    turnMenu.push_back(match.GetUser().GetName() + " goes first.");
+    turnMenu.push_back(match.GetOpponent().GetName() + " goes first.");
+    if(turnMenu.Execute() == 1) {
+        match.ToggleTurn();
     }
 }

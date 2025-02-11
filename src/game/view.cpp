@@ -89,6 +89,7 @@ std::ostream &operator<<(std::ostream &stream, Board const &board)
         }
         cout << '\b' << '\n' << '\n';
     }
+    cout << '\b';
     return stream;
 }
 
@@ -265,6 +266,7 @@ void Reversi::Initialize(Match &match)
             break;
         }
     }
+    System::EraseConsole();
 
     Menu turnMenu;
     turnMenu.SetTitle("Who wants to go first in this match:");
@@ -274,4 +276,6 @@ void Reversi::Initialize(Match &match)
     if(turnMenu.Execute() == 1) {
         match.ToggleTurn();
     }
+    System::EraseConsole();
 }
+

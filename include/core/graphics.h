@@ -35,6 +35,8 @@ namespace Graphics {
         Legal =     static_cast<int>(Color::BrightMagenta)
     };
     
+    // Draws a seperator on the screen.
+    void DrawSeperator(size_t count);
 }
 
 static constexpr Graphics::Color _default = Graphics::Color::White;

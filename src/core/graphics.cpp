@@ -96,3 +96,12 @@ void Graphics::Draw(std::string const &text, Color const &color)
     // Resets the color.
     Graphics::SetForeground(_default);   
 }
+
+void Graphics::DrawSeperator(size_t count)
+{
+    using namespace std;
+    for(int i = 0; i < count; ++i) {
+        cout << '=';
+    }
+    cout << endl;
+}

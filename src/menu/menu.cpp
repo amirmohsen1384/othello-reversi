@@ -184,15 +184,6 @@ size_t SeperatorLength(Menu const &menu) {
     return std::max(itemLength, titleLength);
 } 
 
-void DrawSeperator(size_t count) {
-    using namespace std;
-    const char symbol = '=';
-    for(size_t i = 0; i < count; ++i) {
-        cout << symbol;
-    }
-    cout << endl;
-}
-
 // Prints a menu on the screen.
 void Menu::PrintMenu() const
 {

@@ -126,7 +126,7 @@ bool Reversi::Execute(Match &match)
         if(cin.bad()) {
             throw BadInputException();
         }
-        else if(index < 0 || index >= legals.size()) {
+        else if(index < 0 || index >= static_cast<int>(legals.size())) {
             if(index == -1) {
                 try {
                     IO::Save(match);
@@ -150,6 +150,28 @@ bool Reversi::Execute(Match &match)
 
     match.ToggleTurn();
     return true;
+}
+
+std::string GetName(std::string const &message) {
+    std::string name;
+    using namespace std;
+    using namespace Graphics;
+    while(true) {
+        try {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            Draw(message, Color::Green);
+            getline(cin, name);
+            if(name.empty()) {
+                System::EraseConsole();
+                throw EmptyStringException();
+            }
+            break;
+        }
+        catch(EmptyStringException const &exception) {
+            Draw("The player's name should entered.\n", Color::Red);
+        }
+    }
+    return name;
 }
 
 Match Reversi::Initialize()
@@ -193,15 +215,15 @@ Match Reversi::Initialize()
     auto index = sizeMenu.Execute();
     switch(index) {
         case 0: {
-            match.ResizePanel(Size(6, 6));
+            match.GetPanel().Reset(6, 6);
             break;
         }
         case 1: {
-            match.ResizePanel(Size(8, 8));
+            match.GetPanel().Reset(8, 8);
             break;
         }
         case 2: {
-            match.ResizePanel(Size(10, 10));
+            match.GetPanel().Reset(10, 10);
             break;
         }
     }

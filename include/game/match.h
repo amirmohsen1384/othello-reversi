@@ -52,10 +52,8 @@ public:
     Match::State GetState() const;
     Match::Type GetType() const;
 
-    void ResizePanel(Dimension const &width, Dimension const &height);
-    void ResizePanel(Size const &size);
-    Size GetPanelSize() const;
-    bool IsPanelEmpty() const;
+    Board& GetPanel();
+    const Board& GetPanel() const;
 
     bool MatchContinues();
     size_t Occurrences(Piece const& target) const;

@@ -47,7 +47,7 @@ Match::Match(Player const &user, Player const &opponent, Type const &type) : Mat
 
 Match::Match(Dimension const &width, Dimension const &height, Type const &type) : Match(type)
 {
-    this->ResizePanel(width, height);
+    _panel.Reset(width, height);
 }
 
 Match::Match(Player const &user, Player const &opponent, TurnInfo const &turn, Type const &type) : Match(user, opponent, type)
@@ -59,20 +59,10 @@ Match::Match(Dimension const &width, Dimension const &height,
     Player const &user, Player const &opponent, 
     TurnInfo const &turn, Type const &type) : Match(type)
 {
-    this->ResizePanel(width, height);
+    _panel.Reset(width, height);
     _opponent = opponent;
     _user = user;
     _turn = turn;
-}
-
-Size Match::GetPanelSize() const
-{
-    return _panel.GetDimensions();
-}
-
-bool Match::IsPanelEmpty() const
-{
-    return _panel.IsEmpty();
 }
 
 bool Match::MatchContinues()
@@ -228,16 +218,14 @@ Match::Type Match::GetType() const
     return _type;
 }
 
-void Match::ResizePanel(Dimension const &width, Dimension const &height)
+Board &Match::GetPanel()
 {
-    _panel.Reset(width, height);
+    return _panel;
 }
-
-void Match::ResizePanel(Size const &size)
+const Board &Match::GetPanel() const
 {
-    _panel.Reset(size.GetWidth(), size.GetHeight());
+    return _panel;
 }
-
 
 bool operator==(Match const &one, Match const &two) {
     if(one._panel != two._panel) {

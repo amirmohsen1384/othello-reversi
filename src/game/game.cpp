@@ -1,5 +1,9 @@
-#include "include/game/game.h"
+#include <random>
 #include <fstream>
+#include <iostream>
+#include "include/game/game.h"
+#include "include/core/system.h"
+#include "include/core/graphics.h"
 
 using Magic = uint64_t;
 
@@ -71,4 +75,62 @@ bool Reversi::IO::Exists()
     return exists(GetFilename());
 }
 
+int GuessIndex(size_t min_index, size_t max_index) {
+    if(min_index > max_index) {
+        return -1;
+    }
+    std::random_device device;
+    std::mt19937 generator(device());
+    std::uniform_int_distribution<int> distro(min_index, max_index);
+    return distro(generator);
+}
 
+void Reversi::Execute(Match &match)
+{
+    using namespace std;
+    using namespace System;
+    using namespace Graphics;
+
+    const PointList legals = match.GetPanel().GetLegals(match.GetTurn());
+
+    if(match.GetType() == Match::Type::SinglePlayer && match.GetTurn() == Piece::Opponent) {
+        int index = GuessIndex(0, legals.size() - 1);
+        match.PutPiece(legals.at(index));
+        match.ToggleTurn();
+        return;
+    }
+
+    while(1) {
+        cout << match;
+        DrawSeperator(64);
+
+        switch(match.GetTurn()) {
+            case Piece::User: {
+                Draw(match.GetUser().GetName(), static_cast<Color>(Action::User));
+                break;
+            }
+            case Piece::Opponent: {
+                Draw(match.GetOpponent().GetName(), static_cast<Color>(Action::Opponent));
+                break;
+            }
+            default: {
+                throw BlankPieceException();
+            }
+        }
+
+        int index = 0;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cout << ':' << ' ' << "Enter the number of location to continue: ";
+        cin >> index;
+        if(cin.bad()) {
+            throw BadInputException();
+        }
+        else if(index < 0 || index >= legals.size()) {
+            throw InvalidPointException();
+        }
+
+        match.PutPiece(legals.at(index));
+    }
+
+    match.ToggleTurn();
+}

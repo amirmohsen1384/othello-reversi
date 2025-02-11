@@ -81,3 +81,11 @@ public:
         return "The entered string is empty.";
     }
 };
+
+// Defines an exception to indicate a bad input.
+class BadInputException : public std::exception {
+public:
+    virtual const char* what() const noexcept override {
+        return "The entered input is not valid.";
+    }
+};

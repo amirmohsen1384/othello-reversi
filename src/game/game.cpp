@@ -85,7 +85,7 @@ int GuessIndex(size_t min_index, size_t max_index) {
     return distro(generator);
 }
 
-void Reversi::Execute(Match &match)
+bool Reversi::Execute(Match &match)
 {
     using namespace std;
     using namespace System;
@@ -97,7 +97,7 @@ void Reversi::Execute(Match &match)
         int index = GuessIndex(0, legals.size() - 1);
         match.PutPiece(legals.at(index));
         match.ToggleTurn();
-        return;
+        return true;
     }
 
     while(1) {
@@ -126,11 +126,27 @@ void Reversi::Execute(Match &match)
             throw BadInputException();
         }
         else if(index < 0 || index >= legals.size()) {
-            throw InvalidPointException();
+            if(index == -1) {
+                try {
+                    IO::Save(match);
+                    return false;
+                }
+                catch(std::exception const &exception) {
+                    Draw(exception.what(), Color::Red);
+                    cout << '\n' << "Press any key to come back to the game..." << '\n';
+                    System::InstantKey();
+                    System::EraseConsole();
+                    continue;
+                }
+            } else {
+                throw InvalidPointException();    
+            }
         }
 
         match.PutPiece(legals.at(index));
+        break;
     }
 
     match.ToggleTurn();
+    return true;
 }

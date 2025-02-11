@@ -6,7 +6,7 @@
 namespace Reversi {
     void Narrate(Match const &match);
     void Initialize(Match &match);
-    void Execute(Match &match);
+    bool Execute(Match &match);
 
     namespace IO {
         std::filesystem::path GetFilename();

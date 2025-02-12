@@ -156,19 +156,20 @@ std::string GetName(std::string const &message) {
     while(true) {
         try {
             Draw(message, Color::Green);
-            cin >> name;
-            if(name.empty()) {
+            std::getline(std::cin, name);
+            if (name.empty()) {
                 System::EraseConsole();
                 throw EmptyStringException();
             }
             break;
         }
         catch(EmptyStringException const &exception) {
-            Draw("The player's name should entered.\n", Color::Red);
+            Draw("The player's name should be entered.\n", Color::Red);
         }
     }
     return name;
 }
+
 
 Match Reversi::Initialize()
 {
@@ -181,6 +182,8 @@ Match Reversi::Initialize()
     typeMessage.push_back("Multi Player");
 
     Match match(static_cast<Match::Type>(typeMessage.Execute()));
+    System::EraseConsole();
+
     switch(match.GetType()) {
         case Match::Type::SinglePlayer: {
             std::string name = GetName("Enter your name: ");

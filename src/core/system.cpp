@@ -3,7 +3,15 @@
 #include <cstdlib>
 
 void System::EraseConsole() {
+    // Clears the console.
     system("cls");
+
+    // Resets the attributes of the console.
+    HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
+    DWORD mode;
+    GetConsoleMode(hStdin, &mode);
+    mode |= ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT;
+    SetConsoleMode(hStdin, mode);
 }
 
 void System::Delay(int _duration) {

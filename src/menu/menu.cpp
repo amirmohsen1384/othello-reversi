@@ -198,7 +198,7 @@ void Menu::PrintMenu() const
     cout << endl;
     
     // Draws a seperator.
-    DrawSeperator(seperatorCount);
+    DrawSeperator(cout, seperatorCount);
 
     // Starts printing the items.
     int64_t i = 0;
@@ -220,7 +220,7 @@ void Menu::PrintMenu() const
         cout << endl;
     }
     // Draws a seperator.
-    DrawSeperator(seperatorCount);
+    DrawSeperator(cout, seperatorCount);
 }
 
 int Menu::Execute()

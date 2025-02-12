@@ -103,8 +103,6 @@ bool Reversi::Execute(Match &match)
 
     while(1) {
         cout << match;
-        DrawSeperator(64);
-
         switch(match.GetTurn()) {
             case Piece::User: {
                 Draw(match.GetUser().GetName(), static_cast<Color>(Action::User));
@@ -120,13 +118,12 @@ bool Reversi::Execute(Match &match)
         }
 
         int index = 0;
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         cout << ':' << ' ' << "Enter the number of location to continue: ";
         cin >> index;
         if(cin.bad()) {
             throw BadInputException();
         }
-        else if(index < 0 || index >= static_cast<int>(legals.size())) {
+        else if(index < 1 || index > static_cast<int>(legals.size())) {
             if(index == -1) {
                 try {
                     IO::Save(match);
@@ -144,7 +141,7 @@ bool Reversi::Execute(Match &match)
             }
         }
 
-        match.PutPiece(legals.at(index));
+        match.PutPiece(legals.at(index - 1));
         break;
     }
 
@@ -158,9 +155,8 @@ std::string GetName(std::string const &message) {
     using namespace Graphics;
     while(true) {
         try {
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
             Draw(message, Color::Green);
-            getline(cin, name);
+            cin >> name;
             if(name.empty()) {
                 System::EraseConsole();
                 throw EmptyStringException();
@@ -238,6 +234,7 @@ Match Reversi::Initialize()
         match.ToggleTurn();
     }
     System::EraseConsole();
+
     return match;
 }
 void Reversi::Play()
@@ -268,6 +265,9 @@ void Reversi::Play()
         sharedMatch = Initialize();
     }
 
+    System::EraseConsole();
+    
+
     while(sharedMatch.MatchContinues()) {
         try {
             if(Execute(sharedMatch) == false) {
@@ -277,16 +277,15 @@ void Reversi::Play()
                 System::InstantKey();
                 return;
 
-            } else {
-                System::EraseConsole();
-
             }
         }
         catch(std::exception const &execption) {
             Draw(execption.what(), Color::Red);
-            DrawSeperator(64);
+            cout << endl;
+            DrawSeperator(cout, 64);
         }
+        System::EraseConsole();
     }
-    
+   
     Narrate(sharedMatch);
 }

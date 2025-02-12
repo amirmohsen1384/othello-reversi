@@ -97,11 +97,11 @@ void Graphics::Draw(std::string const &text, Color const &color)
     Graphics::SetForeground(_default);   
 }
 
-void Graphics::DrawSeperator(size_t count)
+std::ostream &Graphics::DrawSeperator(std::ostream &stream, size_t count)
 {
-    using namespace std;
     for(size_t i = 0; i < count; ++i) {
-        cout << '=';
+        stream << '=';
     }
-    cout << endl;
+    stream << std::endl;
+    return stream;
 }

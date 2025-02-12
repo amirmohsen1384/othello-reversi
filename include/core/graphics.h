@@ -36,7 +36,7 @@ namespace Graphics {
     };
     
     // Draws a seperator on the screen.
-    void DrawSeperator(size_t count);
+    std::ostream& DrawSeperator(std::ostream &stream, size_t count);
 }
 
 static constexpr Graphics::Color _default = Graphics::Color::White;

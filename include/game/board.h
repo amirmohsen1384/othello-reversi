@@ -70,6 +70,7 @@ public:
     Board& operator=(Board const &another);
     ~Board();
 
+    void Reset(Size const &size);
     void Reset(Dimension const& width, Dimension const& height);
 
     bool IsLegal(Piece const& player, Point const& position) const;

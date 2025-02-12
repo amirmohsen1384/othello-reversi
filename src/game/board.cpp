@@ -132,16 +132,8 @@ Board::Board(Dimension const &width, Dimension const &height) : Board()
 
 Board &Board::operator=(Board const &another)
 {
-    // deletes the existing board.
-    delete _data;
-
-    // Creates a new one.
-    try {
-        _data = new Coordinate[another._size.GetWidth() * another._size.GetHeight()];
-    }
-    catch(std::bad_alloc const&) {
-        throw CreationException();
-    }
+    // Resets the dimensions of the board.
+    this->Reset(another._size);
 
     // Creates a copy of all pieces in the board.
     START_LOOKING_OVER_BOARD(Point p, *this)
@@ -156,6 +148,11 @@ Board::~Board()
     delete this->_data;
     this->_size.Reset();
     this->_data = nullptr;
+}
+
+void Board::Reset(Size const &size)
+{
+    this->Reset(size.GetWidth(), size.GetHeight());
 }
 
 void Board::Reset(Dimension const &width, Dimension const &height)

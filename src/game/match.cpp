@@ -89,6 +89,7 @@ Match &Match::operator=(Match const &match)
     this->_opponent = match._opponent;
     this->_turn = match._turn;
     this->_state = match._state;
+    this->_type = match._type;
     return *this;
 }
 

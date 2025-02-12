@@ -188,6 +188,7 @@ void Match::PutPiece(const Point &point)
     }
     _panel.At(point) = _turn;
     _panel.UpdateSurroundedPieces(point);
+    UpdateScores();
     UpdateState();
 }
 

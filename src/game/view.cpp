@@ -123,37 +123,28 @@ std::ostream& operator<<(std::ostream &stream, Match const &target)
 size_t Player::Print(PlayerList const &players)
 {
     using namespace Graphics;
-    using namespace std;
-
-    auto result = std::max_element(players.cbegin(), players.cend(), 
-        [](Player const &one, Player const &two) { 
-            return one._name < two._name;
-        });
-
-    if(result == players.end()) {
+    if (players.empty()) {
         return 0;
     }
+    
+    auto result = std::max_element(players.cbegin(), players.cend(), 
+        [](Player const &one, Player const &two) { 
+            return one.GetName().size() < two.GetName().size();
+        }
+    );
 
     const size_t tab = 8;
     const size_t length = result->GetName().size();
 
-    for(const Player &p : players) {
+    for (const Player &p : players) {
         Draw(p.GetName(), Color::BrightMagenta);
-
-        const size_t gap = length - p.GetName().size();
-        for(size_t i = 0; i < gap; ++i) {
-            cout << ' ';
-        }
-
-        for(size_t i = 0; i < tab; ++i) {
-            cout << ' ';
-        }
-
-        cout << p.GetScore() << '\n';
+        const size_t gap = (length > p.GetName().size()) ? (length - p.GetName().size()) : 0;
+        std::cout << std::string(gap, ' ') << std::string(tab, ' ') << p.GetScore() << '\n';
     }
 
     return length;
 }
+
 
 std::ostream& operator<<(std::ostream &output, Player const &target)
 {

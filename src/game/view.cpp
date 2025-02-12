@@ -37,24 +37,22 @@ void Match::PrintPanel() const {
                 }
                 else {
                     Draw("O", color);
+                }
+                
+            } else {
+                auto string = std::string("");
+                if(piece == Piece::User) {
+                    auto color = static_cast<Color>(Action::User);
+                    string.push_back(this->_user.GetName().at(0));
+                    Draw(string, color);
+                
+                } else {    
+                    auto color = static_cast<Color>(Action::Opponent);
+                    string.push_back(this->_user.GetName().at(0));
+                    Draw(string, color);
 
                 }
-            
             }
-
-            auto string = std::string("");
-            if(piece == Piece::User) {
-                auto color = static_cast<Color>(Action::User);
-                string.push_back(this->_user.GetName().at(0));
-                Draw(string, color);
-            
-            } else {    
-                auto color = static_cast<Color>(Action::Opponent);
-                string.push_back(this->_user.GetName().at(0));
-                Draw(string, color);
-
-            }
-
             cout << '\t';
         }
         

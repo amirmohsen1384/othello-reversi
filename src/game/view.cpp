@@ -129,7 +129,7 @@ size_t Player::Print(PlayerList const &players)
 
     auto result = std::max_element(players.cbegin(), players.cend(), 
         [](Player const &one, Player const &two) { 
-            return one._name > two._name;
+            return one._name < two._name;
         });
 
     if(result == players.end()) {

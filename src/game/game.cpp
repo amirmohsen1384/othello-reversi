@@ -274,7 +274,7 @@ void Reversi::Play()
             if(Execute(sharedMatch) == false) {
                 System::EraseConsole();
                 Graphics::Draw("Saved Successfully!", Color::Green);
-                cout << "Press any key to to exit...";
+                cout << endl << "Press any key to to exit...";
                 System::InstantKey();
                 return;
 

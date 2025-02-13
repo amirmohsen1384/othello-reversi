@@ -33,3 +33,6 @@
 
 # VS Code Directory
 .vscode
+
+# Save files
+saves/

@@ -253,9 +253,7 @@ void Reversi::Play()
         loadMessage.push_back("No. Start a new game.");
         switch(loadMessage.Execute()) {
             case 0: {
-                Match temp;
-                IO::Load(temp);
-                sharedMatch = temp;
+                IO::Load(sharedMatch);
                 break;
             }
             case 1: {

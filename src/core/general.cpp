@@ -26,7 +26,7 @@ std::istream& General::ReadString(std::istream &stream, std::string &string) {
     string.clear();
 
     // Reserves enough space for the string.
-    string.reserve(size);
+    string.resize(size);
     if(stream.read(reinterpret_cast<char*>(string.data()), size).bad()) {
         return stream;
     }

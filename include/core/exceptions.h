@@ -89,3 +89,14 @@ public:
         return "The entered input is not valid.";
     }
 };
+
+// Defines an exception to indicate a save game.
+class SavegameException : public std::exception {
+public:
+    virtual const char* what() const noexcept override {
+        return "The game needs to be saved.";
+    }
+};
+
+// Displays the message of an exception.
+void DisplayException(std::exception const &exception);

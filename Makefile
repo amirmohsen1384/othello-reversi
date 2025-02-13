@@ -4,8 +4,8 @@ APP=reversi.exe
 
 all=main
 
-main: game.o board.o player.o match.o scoreboard.o
-	$(CC) $(CFLAGS) -o $(APP) main.cpp *.o 
+main: game.o board.o player.o match.o scoreboard.o resources/logo.res
+	$(CC) $(CFLAGS) -o $(APP) main.cpp *.o  resources/logo.res
 
 match.o: src/game/match.cpp menu.o graphics.o
 	$(CC) $(CFLAGS) -c src/game/match.cpp -o match.o

@@ -3,6 +3,7 @@
 #include "include/menu/menu.h"
 #include "include/game/game.h"
 #include "include/core/graphics.h"
+#include "include/scoreboard/scoreboard.h"
 
 using Magic = uint64_t;
 
@@ -143,4 +144,27 @@ void Reversi::Play()
     }
 
     sharedMatch.Narrate();
+
+    Player winner;
+    switch(sharedMatch.GetState()) {
+        case Match::State::UserWon: {
+            winner = sharedMatch.GetUser();
+            break;
+        }
+        case Match::State::OpponentWon: {
+            winner = sharedMatch.GetOpponent();
+            break;
+        }
+        default: {
+            return;
+        }
+    }
+    
+    RankedPlayer ranked;
+    ranked.SetName(winner.GetName());
+    ranked.SetScore(winner.GetScore());
+    ranked.SetSize(sharedMatch.GetPanel().GetDimensions());
+
+    Scoreboard s;
+    s.Insert(ranked);
 }

@@ -1,4 +1,8 @@
+#include <random>
+#include <iostream>
 #include "include/game/match.h"
+#include "include/core/system.h"
+#include "include/core/graphics.h"
 
 void Match::UpdateState()
 {
@@ -246,4 +250,59 @@ bool operator==(Match const &one, Match const &two) {
 }
 bool operator!=(Match const &one, Match const &two) {
     return !(one == two);
+}
+
+int GuessIndex(size_t min_index, size_t max_index) {
+    if(min_index > max_index) {
+        return -1;
+    }
+    std::random_device device;
+    std::mt19937 generator(device());
+    std::uniform_int_distribution<int> distro(min_index, max_index);
+    return distro(generator);
+}
+
+void Match::Execute()
+{
+    const PointList legals = _panel.GetLegals(_turn);
+    if(_type == Type::SinglePlayer && _turn == Piece::Opponent) {
+        int index = GuessIndex(0, legals.size() - 1);
+        this->PutPiece(legals.at(index));
+        this->ToggleTurn();
+        return;
+    }
+    while(true) {
+        std::cout << *this;
+        switch(_turn) {
+            case Piece::User: {
+                Graphics::Draw(_user.GetName(), static_cast<Graphics::Color>(Graphics::Action::User));
+                break;
+            }
+            case Piece::Opponent: {
+                Graphics::Draw(_opponent.GetName(), static_cast<Graphics::Color>(Graphics::Action::Opponent));
+                break;
+            }
+            default: {
+                throw BlankPieceException();
+            }
+        }
+        int index = 0;
+        std::cout << ':' << ' ' << "Enter the number of location to continue: ";
+        std::cin >> index;
+        if(std::cin.bad()) {
+            throw BadInputException();
+        }
+        else if(index < 1 || index > static_cast<int>(legals.size())) {
+            if(index == -1) {
+                throw SavegameException();
+
+            } else {
+                throw InvalidPointException();
+
+            }
+        }
+        this->PutPiece(legals.at(index - 1));
+        break;
+    }
+    this->ToggleTurn();
 }

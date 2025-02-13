@@ -58,6 +58,8 @@ public:
     bool MatchContinues();
     size_t Occurrences(Piece const& target) const;
 
+    void Execute();
+
     friend std::ostream& operator<<(std::ostream &stream, Match const &target);
     friend bool operator==(Match const &one, Match const &two);
     friend bool operator!=(Match const &one, Match const &two);

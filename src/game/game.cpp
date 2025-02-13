@@ -257,6 +257,7 @@ void Reversi::Play()
                 break;
             }
             case 1: {
+                filesystem::remove(Reversi::IO::GetFilename());
                 sharedMatch = Initialize();
                 break;
             }

@@ -114,17 +114,17 @@ std::ostream &Match::ToBinary(std::ostream &stream) const
     }
 
     auto state = static_cast<int8_t>(_state);
-    if(stream.write(reinterpret_cast<const char*>(&state), sizeof(state))) {
+    if(stream.write(reinterpret_cast<const char*>(&state), sizeof(state)).bad()) {
         return stream;
     }
 
     auto turn = static_cast<int8_t>(_turn);
-    if(stream.write(reinterpret_cast<const char*>(&turn), sizeof(turn))) {
+    if(stream.write(reinterpret_cast<const char*>(&turn), sizeof(turn)).bad()) {
         return stream;
     }
 
     auto type = static_cast<int8_t>(_type);
-    if(stream.write(reinterpret_cast<const char*>(&type), sizeof(type))) {
+    if(stream.write(reinterpret_cast<const char*>(&type), sizeof(type)).bad()) {
         return stream;
     }
 
@@ -146,19 +146,19 @@ std::istream &Match::FromBinary(std::istream &stream)
     }
 
     auto state = static_cast<int8_t>(0);
-    if(stream.read(reinterpret_cast<char*>(&state), sizeof(state))) {
+    if(stream.read(reinterpret_cast<char*>(&state), sizeof(state)).bad()) {
         return stream;
     }
     _state = static_cast<State>(state);
 
     auto turn = static_cast<int8_t>(0);
-    if(stream.read(reinterpret_cast<char*>(&turn), sizeof(turn))) {
+    if(stream.read(reinterpret_cast<char*>(&turn), sizeof(turn)).bad()) {
         return stream;
     }
     _turn = static_cast<TurnInfo>(turn);
 
     auto type = static_cast<int8_t>(0);
-    if(stream.read(reinterpret_cast<char*>(&type), sizeof(type))) {
+    if(stream.read(reinterpret_cast<char*>(&type), sizeof(type)).bad()) {
         return stream;
     }
     _type = static_cast<Type>(type);

@@ -22,9 +22,14 @@ public:
         } \
     }
 
+// Describes some general functions to be used broadly.
 namespace General {
     std::ostream& WriteString(std::ostream &stream, std::string const &string);
     std::istream& ReadString(std::istream &stram, std::string &string);
 }
+
+// Defines some synonyms for the common types of the class.
+using Limit = int64_t;
+using Index = int64_t;
 
 #include "exceptions.h"

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "include/core/general.h"
 #include "navigator.h"
 #include <vector>
 #include <string>
@@ -7,10 +8,6 @@
 
 // Describes the direction of items.
 enum class Orientation {Horizontal, Vertical};
-
-// Defines some synonyms for the common types of the class.
-using Limit = int64_t;
-using Index = int64_t;
 
 // Provides an interface for navigating between item through arrow keys.
 class MenuNavigator : public AbstractNavigator

@@ -1,9 +1,7 @@
-#include <random>
 #include <fstream>
 #include <iostream>
 #include "include/menu/menu.h"
 #include "include/game/game.h"
-#include "include/core/system.h"
 #include "include/core/graphics.h"
 
 using Magic = uint64_t;
@@ -76,79 +74,6 @@ bool Reversi::IO::Exists()
     return exists(GetFilename());
 }
 
-int GuessIndex(size_t min_index, size_t max_index) {
-    if(min_index > max_index) {
-        return -1;
-    }
-    std::random_device device;
-    std::mt19937 generator(device());
-    std::uniform_int_distribution<int> distro(min_index, max_index);
-    return distro(generator);
-}
-
-bool Reversi::Execute(Match &match)
-{
-    using namespace std;
-    using namespace System;
-    using namespace Graphics;
-
-    const PointList legals = match.GetPanel().GetLegals(match.GetTurn());
-
-    if(match.GetType() == Match::Type::SinglePlayer && match.GetTurn() == Piece::Opponent) {
-        int index = GuessIndex(0, legals.size() - 1);
-        match.PutPiece(legals.at(index));
-        match.ToggleTurn();
-        return true;
-    }
-
-    while(1) {
-        cout << match;
-        switch(match.GetTurn()) {
-            case Piece::User: {
-                Draw(match.GetUser().GetName(), static_cast<Color>(Action::User));
-                break;
-            }
-            case Piece::Opponent: {
-                Draw(match.GetOpponent().GetName(), static_cast<Color>(Action::Opponent));
-                break;
-            }
-            default: {
-                throw BlankPieceException();
-            }
-        }
-
-        int index = 0;
-        cout << ':' << ' ' << "Enter the number of location to continue: ";
-        cin >> index;
-        if(cin.bad()) {
-            throw BadInputException();
-        }
-        else if(index < 1 || index > static_cast<int>(legals.size())) {
-            if(index == -1) {
-                try {
-                    IO::Save(match);
-                    return false;
-                }
-                catch(std::exception const &exception) {
-                    Draw(exception.what(), Color::Red);
-                    cout << '\n' << "Press any key to come back to the game..." << '\n';
-                    System::InstantKey();
-                    System::EraseConsole();
-                    continue;
-                }
-            } else {
-                throw InvalidPointException();    
-            }
-        }
-
-        match.PutPiece(legals.at(index - 1));
-        break;
-    }
-
-    match.ToggleTurn();
-    return true;
-}
-
 std::string GetName(std::string const &message) {
     std::string name;
     using namespace std;
@@ -169,7 +94,6 @@ std::string GetName(std::string const &message) {
     }
     return name;
 }
-
 
 Match Reversi::Initialize()
 {
@@ -268,26 +192,45 @@ void Reversi::Play()
     }
 
     System::EraseConsole();
-    
 
     while(sharedMatch.MatchContinues()) {
         try {
-            if(Execute(sharedMatch) == false) {
-                System::EraseConsole();
-                Graphics::Draw("Saved Successfully!", Color::Green);
-                cout << endl << "Press any key to to exit...";
-                System::InstantKey();
-                return;
+            sharedMatch.Execute();
 
+        }
+        catch(SavegameException const &) {            
+            try {
+                System::EraseConsole();
+                std::string successMessage = "Your game has been saved successfully.\n";
+
+                IO::Save(sharedMatch);
+                Graphics::Draw(successMessage, Color::Green);
+                Graphics::DrawSeperator(cout, successMessage.size());
+                System::Delay(2000);
+
+                Menu menu;
+                menu.SetTitle("Would you like to continue the game?");
+                menu.push_back("Yes! Resume the game.");
+                menu.push_back("No! Quit the game.");
+                if(menu.Execute() == 1) {
+                    return;
+                }
+
+                System::EraseConsole();
             }
+            catch(std::exception const &exception) {
+                DisplayException(exception);
+                return;
+            }
+
         }
-        catch(std::exception const &execption) {
-            Draw(execption.what(), Color::Red);
-            cout << endl;
-            DrawSeperator(cout, 64);
+        catch(std::exception const &exception) {
+            DisplayException(exception);
+            return;
         }
+
         System::EraseConsole();
     }
-   
+
     Narrate(sharedMatch);
 }

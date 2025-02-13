@@ -5,7 +5,6 @@
 
 namespace Reversi {
     void Narrate(Match const &match);
-    bool Execute(Match &match);
     Match Initialize();
     void Play();
 

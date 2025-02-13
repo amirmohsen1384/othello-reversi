@@ -4,10 +4,10 @@ APP=reversi.exe
 
 all=main
 
-main: graphics.o menu.o point.o board.o player.o general.o size.o match.o view_game.o view_core.o game.o exceptions.o
+main: game.o ranked.o board.o player.o match.o
 	$(CC) $(CFLAGS) -o $(APP) main.cpp *.o 
 
-match.o: src/game/match.cpp
+match.o: src/game/match.cpp menu.o graphics.o
 	$(CC) $(CFLAGS) -c src/game/match.cpp -o match.o
 
 system.o: src/core/system.cpp
@@ -16,19 +16,19 @@ system.o: src/core/system.cpp
 graphics.o: system.o src/core/graphics.cpp
 	$(CC) $(CFLAGS) -c src/core/graphics.cpp -o graphics.o
 
-point.o: src/core/point.cpp
+point.o: src/core/point.cpp view_core.o
 	$(CC) $(CFLAGS) -c src/core/point.cpp -o point.o
 
-menu.o: navigator.o src/menu/menu.cpp
+menu.o: navigator.o src/menu/menu.cpp graphics.o
 	$(CC) $(CFLAGS) -c src/menu/menu.cpp -o menu.o
 
 navigator.o: src/menu/navigator.cpp
 	$(CC) $(CFLAGS) -c src/menu/navigator.cpp -o navigator.o
 
-board.o: src/game/board.cpp
+board.o: src/game/board.cpp size.o point.o graphics.o
 	$(CC) $(CFLAGS) -c src/game/board.cpp -o board.o
 
-player.o: src/game/player.cpp
+player.o: src/game/player.cpp general.o
 	$(CC) $(CFLAGS) -c src/game/player.cpp -o player.o
 
 general.o: src/core/general.cpp
@@ -37,17 +37,20 @@ general.o: src/core/general.cpp
 size.o: src/core/size.cpp
 	$(CC) $(CFLAGS) -c src/core/size.cpp -o size.o
 
-view_game.o: src/game/view.cpp
+view_game.o: src/game/view.cpp menu.o graphics.o
 	$(CC) $(CFLAGS) -c src/game/view.cpp -o view_game.o
 
-view_core.o: src/core/view.cpp
+view_core.o: src/core/view.cpp graphics.o
 	$(CC) $(CFLAGS) -c src/core/view.cpp -o view_core.o
 	
-game.o: src/game/game.cpp
+game.o: src/game/game.cpp view_game.o exceptions.o menu.o graphics.o
 	$(CC) $(CFLAGS) -c src/game/game.cpp -o game.o
 	
 exceptions.o: src/core/exceptions.cpp
 	$(CC) $(CFLAGS) -c src/core/exceptions.cpp -o exceptions.o
+
+ranked.o: src/scoreboard/rankedplayer.cpp
+	$(CC) $(CFLAGS) -c src/scoreboard/rankedplayer.cpp -o ranked.o
 
 clean:
 	@rm *.o

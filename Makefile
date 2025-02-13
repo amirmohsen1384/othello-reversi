@@ -4,7 +4,7 @@ APP=reversi.exe
 
 all=main
 
-main: game.o board.o player.o match.o
+main: game.o board.o player.o match.o scoreboard.o
 	$(CC) $(CFLAGS) -o $(APP) main.cpp *.o 
 
 match.o: src/game/match.cpp menu.o graphics.o
@@ -28,9 +28,8 @@ navigator.o: src/menu/navigator.cpp
 board.o: src/game/board.cpp size.o point.o graphics.o
 	$(CC) $(CFLAGS) -c src/game/board.cpp -o board.o
 
-player.o: src/game/player.cpp src/scoreboard/player.cpp general.o
+player.o: src/game/player.cpp general.o
 	$(CC) $(CFLAGS) -c src/game/player.cpp -o player.o
-	$(CC) $(CFLAGS) -c src/scoreboard/player.cpp -o ranked.o
 
 general.o: src/core/general.cpp
 	$(CC) $(CFLAGS) -c src/core/general.cpp -o general.o
@@ -49,6 +48,12 @@ game.o: src/game/game.cpp view_game.o exceptions.o menu.o graphics.o
 	
 exceptions.o: src/core/exceptions.cpp
 	$(CC) $(CFLAGS) -c src/core/exceptions.cpp -o exceptions.o
+
+scoreboard.o: src/scoreboard/scoreboard.cpp ranked.o
+	$(CC) $(CFLAGS) -c src/scoreboard/scoreboard.cpp -o scoreboard.o
+
+ranked.o: src/scoreboard/player.cpp
+	$(CC) $(CFLAGS) -c src/scoreboard/player.cpp -o ranked.o
 
 clean:
 	@rm *.o

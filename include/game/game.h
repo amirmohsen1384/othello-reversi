@@ -4,7 +4,6 @@
 #include <filesystem>
 
 namespace Reversi {
-    Match Initialize();
     void Play();
 
     namespace IO {

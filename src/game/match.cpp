@@ -1,5 +1,6 @@
 #include <random>
 #include <iostream>
+#include "include/menu/menu.h"
 #include "include/game/match.h"
 #include "include/core/system.h"
 #include "include/core/graphics.h"
@@ -305,4 +306,87 @@ void Match::Execute()
         break;
     }
     this->ToggleTurn();
+}
+
+std::string GetName(std::string const &message) {
+    std::string name;
+    using namespace std;
+    using namespace Graphics;
+    while(true) {
+        try {
+            Draw(message, Color::Green);
+            std::getline(std::cin, name);
+            if (name.empty()) {
+                System::EraseConsole();
+                throw EmptyStringException();
+            }
+            break;
+        }
+        catch(EmptyStringException const &exception) {
+            Draw("The player's name should be entered.\n", Color::Red);
+        }
+    }
+    return name;
+}
+
+void Match::Initialize() {
+    using namespace std;
+    using namespace Graphics;
+
+    Menu typeMessage;
+    typeMessage.push_back("Single Player");
+    typeMessage.push_back("Multi Player");
+    typeMessage.SetTitle("How is the match going to be played?");
+
+    _type = static_cast<Type>(typeMessage.Execute());
+    System::EraseConsole();
+
+    switch(_type) {
+        case Match::Type::SinglePlayer: {
+            _opponent.SetName("Computer");
+            _user.SetName(GetName("Enter your name: "));
+            System::EraseConsole();
+            break;
+        }
+        case Match::Type::DoublePlayer: {
+            _user.SetName(GetName("Enter the name of player 1: "));
+            System::EraseConsole();
+
+            _opponent.SetName(GetName("Enter the name of player 2: "));
+            System::EraseConsole();
+            break;
+        }
+    }
+
+    Menu sizeMenu;
+    sizeMenu.SetTitle("Select one of the following dimensions to start:");
+    sizeMenu.SetOrientation(Orientation::Horizontal);
+    sizeMenu.push_back("6 x 6");
+    sizeMenu.push_back("8 x 8");
+    sizeMenu.push_back("10 x 10");
+    switch(sizeMenu.Execute()) {
+        case 0: {
+            _panel.Reset(6, 6);
+            break;
+        }
+        case 1: {
+            _panel.Reset(8, 8);
+            break;
+        }
+        case 2: {
+            _panel.Reset(10, 10);
+            break;
+        }
+    }
+    System::EraseConsole();
+
+    Menu turnMenu;
+    turnMenu.SetTitle("Who wants to go first in this match:");
+    turnMenu.SetOrientation(Orientation::Vertical);
+    turnMenu.push_back(_user.GetName() + " goes first.");
+    turnMenu.push_back(_opponent.GetName() + " goes first.");
+    if(turnMenu.Execute() == 1) {
+        ToggleTurn();
+    }
+    System::EraseConsole();
 }

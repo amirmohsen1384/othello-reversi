@@ -60,6 +60,7 @@ public:
 
     void Execute();
     void Narrate();
+    void Initialize();
 
     friend std::ostream& operator<<(std::ostream &stream, Match const &target);
     friend bool operator==(Match const &one, Match const &two);

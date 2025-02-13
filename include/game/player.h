@@ -21,8 +21,8 @@ public:
     std::string GetName() const;
     std::uint64_t GetScore() const;
 
-    void SetName(std::string const& value);
-    void SetScore(std::uint64_t const& value);
+    virtual void SetName(std::string const& value);
+    virtual void SetScore(std::uint64_t const& value);
 
     virtual std::istream& FromBinary(std::istream &stream) override;
     virtual std::ostream& ToBinary(std::ostream &stream) const override;

@@ -6,6 +6,9 @@ std::ostream &RankedPlayer::ToBinary(std::ostream &stream) const
     if(Player::ToBinary(stream).bad()) {
         return stream;
     }
+    if(_size.ToBinary(stream).bad()) {
+        return stream;
+    }
     if(stream.write(reinterpret_cast<const char*>(&_ratio), sizeof(_ratio)).bad()) {
         return stream;
     }
@@ -15,6 +18,9 @@ std::ostream &RankedPlayer::ToBinary(std::ostream &stream) const
 std::istream& RankedPlayer::FromBinary(std::istream &stream)
 {
     if(Player::FromBinary(stream).bad()) {
+        return stream;
+    }
+    if(_size.FromBinary(stream).bad()) {
         return stream;
     }
     if(stream.read(reinterpret_cast<char*>(&_ratio), sizeof(_ratio)).bad()) {
@@ -30,22 +36,23 @@ void RankedPlayer::UpdateRatio()
     _ratio = score / area;
 }
 
-RankedPlayer::RankedPlayer() : Player()
-{
-}
-
+RankedPlayer::RankedPlayer() : Player() {}
 RankedPlayer::RankedPlayer(RankedPlayer const &player)
 {
     *this = player;
 }
-
 RankedPlayer::RankedPlayer(std::string const &name, ScoreContainer const &score, Size const &size) : Player(name, score)
 {
+    SetSize(size);
 }
 
 Size RankedPlayer::GetSize() const
 {
     return _size;
+}
+float RankedPlayer::GetRatio() const
+{
+    return _ratio;
 }
 
 void RankedPlayer::SetSize(Size const &size)

@@ -17,6 +17,7 @@ public:
     RankedPlayer& operator=(RankedPlayer const &player);
 
     Size GetSize() const;
+    float GetRatio() const;
     
     virtual void SetSize(Size const &size);
     virtual void SetScore(std::uint64_t const& value);

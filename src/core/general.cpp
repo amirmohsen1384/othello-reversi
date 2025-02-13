@@ -1,4 +1,8 @@
+#include "include/core/exceptions.h"
+#include "include/core/graphics.h"
 #include "include/core/general.h"
+#include "include/core/system.h"
+#include <iostream>
 
 std::ostream& General::WriteString(std::ostream &stream, std::string const &string) {
     // Writes the size of the string.
@@ -32,4 +36,13 @@ std::istream& General::ReadString(std::istream &stream, std::string &string) {
     }
 
     return stream;
+}
+
+// Displays an error message
+void DisplayException(std::exception const &exception) {
+    System::EraseConsole();
+
+    Graphics::Draw(exception.what(), Graphics::Color::Red);
+    std::cout << "Press any key to continue.";
+    System::InstantKey();
 }

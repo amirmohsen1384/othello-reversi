@@ -43,11 +43,8 @@ view_game.o: src/game/view.cpp menu.o graphics.o
 view_core.o: src/core/view.cpp graphics.o
 	$(CC) $(CFLAGS) -c src/core/view.cpp -o view_core.o
 	
-game.o: src/game/game.cpp view_game.o exceptions.o menu.o graphics.o
+game.o: src/game/game.cpp view_game.o menu.o graphics.o
 	$(CC) $(CFLAGS) -c src/game/game.cpp -o game.o
-	
-exceptions.o: src/core/exceptions.cpp
-	$(CC) $(CFLAGS) -c src/core/exceptions.cpp -o exceptions.o
 
 scoreboard.o: src/scoreboard/scoreboard.cpp ranked.o
 	$(CC) $(CFLAGS) -c src/scoreboard/scoreboard.cpp -o scoreboard.o

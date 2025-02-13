@@ -23,6 +23,7 @@ public:
     void SetHeight(Dimension const &value);
 
     void Reset();
+    size_t GetArea() const;
 
     virtual std::ostream& ToBinary(std::ostream &stream) const override;
     virtual std::istream& FromBinary(std::istream &stream) override;

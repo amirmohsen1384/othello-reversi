@@ -53,6 +53,11 @@ void Size::Reset()
     ResetHeight();
 }
 
+size_t Size::GetArea() const
+{
+    return _width * _height;
+}
+
 std::ostream &Size::ToBinary(std::ostream &stream) const
 {
     if(stream.write(reinterpret_cast<const char*>(&_width), sizeof(_width)).bad()) {

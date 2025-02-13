@@ -2,6 +2,7 @@
 
 #include <ostream>
 #include <istream>
+#include <cstdint>
 
 class ISerialize {
 public:

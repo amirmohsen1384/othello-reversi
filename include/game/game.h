@@ -4,7 +4,6 @@
 #include <filesystem>
 
 namespace Reversi {
-    void Narrate(Match const &match);
     Match Initialize();
     void Play();
 

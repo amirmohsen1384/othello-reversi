@@ -153,25 +153,25 @@ std::ostream& operator<<(std::ostream &output, Player const &target)
     return output;
 }
 
-void Reversi::Narrate(Match const &match)
+void Match::Narrate()
 {
     using namespace std;
     using namespace Graphics;
-    
-    Player::Print({match.GetUser(), match.GetOpponent()});
+
+    Player::Print({_user, _opponent});
     for(auto i = 0; i < 32; ++i) {
         cout << '=';
     }
     cout << endl;
 
-    switch(match.GetState()) {
-        case Match::State::UserWon: {
-            Draw(match.GetUser().GetName(), static_cast<Color>(Action::User));
+    switch(_state) {
+        case State::UserWon: {
+            Draw(_user.GetName(), static_cast<Color>(Action::User));
             cout << ':' << ' ' << "You won the game!" << endl;
             break;
         }
         case Match::State::OpponentWon: {
-            Draw(match.GetOpponent().GetName(), static_cast<Color>(Action::Opponent));
+            Draw(_opponent.GetName(), static_cast<Color>(Action::Opponent));
             cout << ':' << ' ' << "You won the game!" << endl;
             break;
         }
@@ -185,4 +185,3 @@ void Reversi::Narrate(Match const &match)
         }
     }
 }
-

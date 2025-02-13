@@ -59,6 +59,7 @@ public:
     size_t Occurrences(Piece const& target) const;
 
     void Execute();
+    void Narrate();
 
     friend std::ostream& operator<<(std::ostream &stream, Match const &target);
     friend bool operator==(Match const &one, Match const &two);

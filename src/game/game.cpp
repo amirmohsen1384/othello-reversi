@@ -232,5 +232,5 @@ void Reversi::Play()
         System::EraseConsole();
     }
 
-    Narrate(sharedMatch);
+    sharedMatch.Narrate();
 }

@@ -27,6 +27,7 @@ public:
 
     friend bool operator==(RankedPlayer const &one, RankedPlayer const &two);
     friend bool operator!=(RankedPlayer const &one, RankedPlayer const &two);
+    friend bool LessThan(RankedPlayer const &one, RankedPlayer const &two);
 
 private:
     float _ratio = 0.00;

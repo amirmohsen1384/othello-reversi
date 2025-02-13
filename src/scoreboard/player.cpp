@@ -1,5 +1,4 @@
 #include "include/scoreboard/player.h"
-#include "player.h"
 
 std::ostream &RankedPlayer::ToBinary(std::ostream &stream) const
 {
@@ -37,9 +36,10 @@ void RankedPlayer::UpdateRatio()
 }
 
 RankedPlayer::RankedPlayer() : Player() {}
-RankedPlayer::RankedPlayer(RankedPlayer const &player)
+RankedPlayer::RankedPlayer(RankedPlayer const &player) : Player(player)
 {
-    *this = player;
+    this->_ratio = player._ratio;
+    this->_size = player._size;
 }
 RankedPlayer::RankedPlayer(std::string const &name, ScoreContainer const &score, Size const &size) : Player(name, score)
 {
@@ -68,7 +68,7 @@ void RankedPlayer::SetScore(std::uint64_t const &value)
 
 RankedPlayer& RankedPlayer::operator=(RankedPlayer const &another)
 {
-    static_cast<RankedPlayer>(*this) = static_cast<RankedPlayer>(another);
+    static_cast<Player>(*this) = static_cast<Player>(another);
     this->_ratio = another._ratio;
     this->_size = another._size;
     return *this;

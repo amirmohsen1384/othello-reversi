@@ -98,5 +98,13 @@ public:
     }
 };
 
+// Defines an exception to indicate a return to the main menu.
+class MenuReturnException : public std::exception {
+public:
+    virtual const char* what() const noexcept override {
+        return "The game has returned to the main menu.";
+    }
+};
+
 // Displays the message of an exception.
 void DisplayException(std::exception const &exception);

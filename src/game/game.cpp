@@ -83,23 +83,15 @@ void Reversi::Play()
 
     Match mainMatch;
     if(IO::Exists()) {
-        Menu loadMessage;
-        loadMessage.SetTitle("You have an unfinished match from your player.\nWould you like to continue?");
-        loadMessage.push_back("Yes. I want to continue.");
-        loadMessage.push_back("No. Start a new game.");
-        switch(loadMessage.Execute()) {
-            case 0: {
-                IO::Load(mainMatch);
-                break;
-            }
-            case 1: {
-                filesystem::remove(Reversi::IO::GetFilename());
-                mainMatch.Initialize();
-                break;
-            }
+        bool result = Menu::Confirm("You have an unfinished match from your player.\nWould you like to continue?");
+        if(result) {
+            IO::Load(mainMatch);
+        } else {
+            filesystem::remove(Reversi::IO::GetFilename());
+            mainMatch.Initialize();
         }
-    }
-    else {
+
+    } else {
         mainMatch.Initialize();
     }
 
@@ -112,12 +104,9 @@ void Reversi::Play()
         }
         catch(SavegameException const &) {            
             try {
-                Menu menu;
                 IO::Save(mainMatch);
-                menu.SetTitle("Saved successfully. Would you like to continue the game?");
-                menu.push_back("Yes. I want to continue.");
-                menu.push_back("No. Return to the main menu.");
-                if(menu.Execute() == 1) {
+                bool result = Menu::Confirm("Saved successfully. Would you like to continue the game?");
+                if(!result) {
                     return;
                 }
                 System::EraseConsole();

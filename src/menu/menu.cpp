@@ -266,8 +266,8 @@ bool Menu::Confirm(std::string const &message)
     Menu menu;
     menu.SetOrientation(Orientation::Horizontal);
     menu.SetTitle(message);
-    menu.push_back("Yes");
     menu.push_back("No");
+    menu.push_back("Yes");
     return menu.Execute();
 }
 

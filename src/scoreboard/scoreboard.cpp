@@ -202,7 +202,5 @@ std::ostream& operator<<(std::ostream &output, const Scoreboard &board)
     }
 
     Graphics::SetForeground(_default);
-
-    Graphics::DrawSeperator(output, seperator);
     return output;
 }

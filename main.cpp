@@ -14,7 +14,6 @@ int main() {
     while(true) {
         int index = mainMenu.Execute();
         System::EraseConsole();
-
         switch(index) {
             case 0: {
                 Reversi::Play();
@@ -22,7 +21,12 @@ int main() {
             }
             case 1: {
                 Scoreboard score;
-                std::cout << score;
+                if(score.Container().empty()) {
+                    std::cout << "No high scores yet!" << std::endl;
+                } else {
+                    std::cout << score;
+                }
+                std::cout << std::string(64, '=') << std::endl;
                 std::cout << "Press any key to go back to the main menu.";
                 System::InstantKey();
                 break;
@@ -32,8 +36,8 @@ int main() {
                 break;
             }
         }
-
         System::EraseConsole();
     }
+
     return 0;
 }

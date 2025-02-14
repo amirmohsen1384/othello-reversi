@@ -3,6 +3,7 @@
 #include "include/core/general.h"
 #include "include/core/system.h"
 #include <iostream>
+#include <cstring>
 
 std::ostream& General::WriteString(std::ostream &stream, std::string const &string) {
     // Writes the size of the string.
@@ -41,6 +42,6 @@ std::istream& General::ReadString(std::istream &stream, std::string &string) {
 // Displays an error message
 void DisplayException(std::exception const &exception) {
     System::EraseConsole();
-    Draw(exception.what(), static_cast<Color>(Action::Error));
-    cout << std::endl << std::string(std::strlen(exception.what()), '=') << std::endl;
+    Draw(exception.what(), static_cast<Graphics::Color>(Graphics::Action::Error));
+    std::cout << std::endl << std::string(std::strlen(exception.what()), '=') << std::endl;
 }

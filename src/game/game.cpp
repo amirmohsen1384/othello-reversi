@@ -83,7 +83,7 @@ void Reversi::Play()
 
     Match mainMatch;
     if(IO::Exists()) {
-        bool result = Menu::Confirm("You have an unfinished match from your player.\nWould you like to continue?");
+        bool result = Menu::Confirm("Would you like to continue the previous match?");
         if(result) {
             IO::Load(mainMatch);
         } else {

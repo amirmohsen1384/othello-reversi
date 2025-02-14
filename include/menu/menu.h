@@ -14,8 +14,12 @@ class MenuNavigator : public AbstractNavigator
 {
     Limit _min = 0;
     Index _pos = 0;
+    bool _modal = true;
     Limit _max = std::numeric_limits<Limit>::max();
     Orientation _orientation = Orientation::Vertical;
+
+protected:
+    virtual System::KeyNumber GetKeyReject() const;
 
 public:
     MenuNavigator();
@@ -34,6 +38,9 @@ public:
 
     Orientation GetOrientation() const;
     void SetOrientation(Orientation const& value);
+
+    bool IsModal() const;
+    void SetModal(bool value);
 
 public:
     virtual void MoveTop() override;

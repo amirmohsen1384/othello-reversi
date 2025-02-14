@@ -69,6 +69,16 @@ void MenuNavigator::SetOrientation(Orientation const &value)
     _orientation = value;
 }
 
+bool MenuNavigator::IsModal() const
+{
+    return _modal;
+}
+
+void MenuNavigator::SetModal(bool value)
+{
+    _modal = value;
+}
+
 void MenuNavigator::MoveTop()
 {
     if(_orientation == Orientation::Vertical) {
@@ -249,4 +259,11 @@ int Menu::Execute()
     }
 
     return state == State::Accepted ? this->GetPosition() : EXECUTION_FAILED;
+}
+System::KeyNumber MenuNavigator::GetKeyReject() const
+{
+    if(_modal) {
+        return 0;
+    }
+    return AbstractNavigator::GetKeyReject();
 }

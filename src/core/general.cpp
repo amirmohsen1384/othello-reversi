@@ -41,7 +41,6 @@ std::istream& General::ReadString(std::istream &stream, std::string &string) {
 // Displays an error message
 void DisplayException(std::exception const &exception) {
     System::EraseConsole();
-    Graphics::Draw(exception.what(), static_cast<Graphics::Color>(Graphics::Action::Error));
-    std::cout << "Press any key to continue.";
-    System::InstantKey();
+    Draw(exception.what(), static_cast<Color>(Action::Error));
+    cout << std::endl << std::string(std::strlen(exception.what()), '=') << std::endl;
 }

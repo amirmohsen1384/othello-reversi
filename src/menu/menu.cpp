@@ -260,6 +260,17 @@ int Menu::Execute()
 
     return state == State::Accepted ? this->GetPosition() : EXECUTION_FAILED;
 }
+
+bool Menu::Confirm(std::string const &message)
+{
+    Menu menu;
+    menu.SetOrientation(Orientation::Horizontal);
+    menu.SetTitle(message);
+    menu.push_back("Yes");
+    menu.push_back("No");
+    return menu.Execute();
+}
+
 System::KeyNumber MenuNavigator::GetKeyReject() const
 {
     if(_modal) {

@@ -86,4 +86,7 @@ public:
 
     // Shows up a menu containing some items.
     int Execute();
+
+    // Shows up a confirm message.
+    static bool Confirm(std::string const& message);
 };

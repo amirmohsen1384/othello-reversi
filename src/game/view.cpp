@@ -154,10 +154,7 @@ void Match::Narrate()
     using namespace Graphics;
 
     Player::Print({_user, _opponent});
-    for(auto i = 0; i < 32; ++i) {
-        cout << '=';
-    }
-    cout << endl;
+    cout << string(32, '=') << endl;
 
     switch(_state) {
         case State::UserWon: {
@@ -179,4 +176,6 @@ void Match::Narrate()
             break;
         }
     }
+
+    cout << string(32, '=') << endl;
 }

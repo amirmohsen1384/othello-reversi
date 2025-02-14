@@ -32,7 +32,8 @@ namespace Graphics {
         Blank =     static_cast<int>(Color::Gray),
         User =      static_cast<int>(Color::BrightBlue),
         Opponent =  static_cast<int>(Color::BrightRed),
-        Legal =     static_cast<int>(Color::BrightMagenta)
+        Legal =     static_cast<int>(Color::BrightMagenta),
+        Error =     static_cast<int>(Color::Red)
     };
     
     // Draws a seperator on the screen.

@@ -136,8 +136,13 @@ void Reversi::Play()
         }
     }
 
+    // Deletes the save file.
+    filesystem::remove(Reversi::IO::GetFilename());
+
+    // Narrates the final state of the match.
     mainMatch.Narrate();
 
+    // Inserts the winner into the scoreboard.
     Player winner;
     switch(mainMatch.GetState()) {
         case Match::State::UserWon: {
@@ -160,4 +165,8 @@ void Reversi::Play()
 
     Scoreboard s;
     s.Insert(ranked);
+
+    // Waits for the user to press any key.
+    std::cout << "Press any to continue.";
+    System::InstantKey();
 }

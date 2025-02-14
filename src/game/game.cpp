@@ -1,3 +1,4 @@
+#include <cstring>
 #include <fstream>
 #include <iostream>
 #include "include/menu/menu.h"
@@ -80,7 +81,7 @@ void Reversi::Play()
     using namespace std;
     using namespace Graphics;
 
-    Match sharedMatch;
+    Match mainMatch;
     if(IO::Exists()) {
         Menu loadMessage;
         loadMessage.SetTitle("You have an unfinished match from your player.\nWould you like to continue?");
@@ -88,71 +89,74 @@ void Reversi::Play()
         loadMessage.push_back("No. Start a new game.");
         switch(loadMessage.Execute()) {
             case 0: {
-                IO::Load(sharedMatch);
+                IO::Load(mainMatch);
                 break;
             }
             case 1: {
                 filesystem::remove(Reversi::IO::GetFilename());
-                sharedMatch.Initialize();
+                mainMatch.Initialize();
                 break;
             }
         }
     }
     else {
-        sharedMatch.Initialize();
+        mainMatch.Initialize();
     }
 
     System::EraseConsole();
 
-    while(sharedMatch.MatchContinues()) {
+    while(mainMatch.MatchContinues()) {
         try {
-            sharedMatch.Execute();
-
+            mainMatch.Execute();
+            System::EraseConsole();
         }
         catch(SavegameException const &) {            
             try {
-                System::EraseConsole();
-                std::string successMessage = "Your game has been saved successfully.\n";
-
-                IO::Save(sharedMatch);
-                Graphics::Draw(successMessage, Color::Green);
-                Graphics::DrawSeperator(cout, successMessage.size());
-                System::Delay(2000);
-
                 Menu menu;
-                menu.SetTitle("Would you like to continue the game?");
-                menu.push_back("Yes! Resume the game.");
-                menu.push_back("No! Quit the game.");
+                IO::Save(mainMatch);
+                menu.SetTitle("Saved successfully. Would you like to continue the game?");
+                menu.push_back("Yes. I want to continue.");
+                menu.push_back("No. Return to the main menu.");
                 if(menu.Execute() == 1) {
                     return;
                 }
-
                 System::EraseConsole();
             }
-            catch(std::exception const &exception) {
+            catch(exception const &exception) {
+                System::EraseConsole();
                 DisplayException(exception);
                 return;
             }
 
         }
-        catch(std::exception const &exception) {
-            DisplayException(exception);
+        catch(BadInputException const &exception) {
+            cin.clear();
+            System::EraseConsole();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            Draw(exception.what(), static_cast<Color>(Action::Error));
+            cout << std::endl << std::string(std::strlen(exception.what()), '=') << std::endl;
+        }
+        catch(MenuReturnException const &) {
+            System::EraseConsole();
             return;
         }
-
-        System::EraseConsole();
+        catch(IllegalPointException const &exception) {
+            System::EraseConsole();
+            Draw(exception.what(), static_cast<Color>(Action::Error));
+            cout << std::endl << std::string(std::strlen(exception.what()), '=') << std::endl;
+        }
     }
 
-    sharedMatch.Narrate();
+    mainMatch.Narrate();
 
     Player winner;
-    switch(sharedMatch.GetState()) {
+    switch(mainMatch.GetState()) {
         case Match::State::UserWon: {
-            winner = sharedMatch.GetUser();
+            winner = mainMatch.GetUser();
             break;
         }
         case Match::State::OpponentWon: {
-            winner = sharedMatch.GetOpponent();
+            winner = mainMatch.GetOpponent();
             break;
         }
         default: {
@@ -163,7 +167,7 @@ void Reversi::Play()
     RankedPlayer ranked;
     ranked.SetName(winner.GetName());
     ranked.SetScore(winner.GetScore());
-    ranked.SetSize(sharedMatch.GetPanel().GetDimensions());
+    ranked.SetSize(mainMatch.GetPanel().GetDimensions());
 
     Scoreboard s;
     s.Insert(ranked);

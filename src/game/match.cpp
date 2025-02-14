@@ -1,4 +1,5 @@
 #include <random>
+#include <sstream>
 #include <iostream>
 #include "include/menu/menu.h"
 #include "include/game/match.h"
@@ -265,46 +266,68 @@ int GuessIndex(size_t min_index, size_t max_index) {
 
 void Match::Execute()
 {
+    // Returns a list of legal locations for the current player.
     const PointList legals = _panel.GetLegals(_turn);
+
+    // If the match is single player, the computer will put a piece.
     if(_type == Type::SinglePlayer && _turn == Piece::Opponent) {
         int index = GuessIndex(0, legals.size() - 1);
         this->PutPiece(legals.at(index));
         this->ToggleTurn();
         return;
     }
-    while(true) {
-        std::cout << *this;
-        switch(_turn) {
-            case Piece::User: {
-                Graphics::Draw(_user.GetName(), static_cast<Graphics::Color>(Graphics::Action::User));
+
+    // Prints the whole match on the screen.
+    int index = 0;
+    std::cout << *this;
+
+    // Prints the special choices.
+    std::cout << "-1) Save the game." << std::endl;
+    std::cout << "-2) Return to the main menu." << std::endl;
+    std::cout << std::string(64, '=') << std::endl;
+
+    // Prints the name of the player.
+    switch(_turn) {
+        case Piece::User: {
+            Graphics::Draw(_user.GetName(), static_cast<Graphics::Color>(Graphics::Action::User));
+            break;
+        }
+        case Piece::Opponent: {
+            Graphics::Draw(_opponent.GetName(), static_cast<Graphics::Color>(Graphics::Action::Opponent));
+            break;
+        }
+        default: {
+            throw BlankPieceException();
+        }
+    }
+
+    // Prompts the player to choose a legal location.
+    std::cout << ':' << ' ' << "Choose your location: " << '\n';
+
+    // Obtains a location and validates it.
+    std::cin >> index;
+    if(std::cin.fail()) {
+        throw BadInputException();
+    }
+    else if(index < 1 || index > static_cast<int>(legals.size())) {
+        switch(index) {
+            case -1: {
+                throw SavegameException();
                 break;
             }
-            case Piece::Opponent: {
-                Graphics::Draw(_opponent.GetName(), static_cast<Graphics::Color>(Graphics::Action::Opponent));
+            case -2: {
+                throw MenuReturnException();
                 break;
             }
             default: {
-                throw BlankPieceException();
+                throw IllegalPointException();
+                break;
             }
         }
-        int index = 0;
-        std::cout << ':' << ' ' << "Enter the number of location to continue: ";
-        std::cin >> index;
-        if(std::cin.bad()) {
-            throw BadInputException();
-        }
-        else if(index < 1 || index > static_cast<int>(legals.size())) {
-            if(index == -1) {
-                throw SavegameException();
-
-            } else {
-                throw InvalidPointException();
-
-            }
-        }
-        this->PutPiece(legals.at(index - 1));
-        break;
     }
+
+    // Puts a piece on the selected location.
+    this->PutPiece(legals.at(index - 1));
     this->ToggleTurn();
 }
 

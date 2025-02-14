@@ -107,16 +107,11 @@ std::ostream& operator<<(std::ostream &stream, Match const &target)
     stream << endl;
 
     SetForeground(_default);
-    for(auto i = 0; i < 64; ++i) {
-        stream << '=';
-    }
-    stream << endl;
 
+    cout << std::string(64, '=') << std::endl;
     target.PrintPanel();
-    for(auto i = 0; i < 64; ++i) {
-        stream << '=';
-    }
-    stream << endl;
+    cout << std::string(64, '=') << std::endl;
+    
     return stream;
 }
 

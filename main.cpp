@@ -22,12 +22,12 @@ int main() {
             case 1: {
                 Scoreboard score;
                 if(score.Container().empty()) {
-                    std::cout << "No high scores yet!" << std::endl;
+                    std::cout << "No high scores yet!" << '\n';
+                    std::cout << std::string(64, '=') << std::endl;
                 } else {
                     std::cout << score;
                 }
-                std::cout << std::string(64, '=') << std::endl;
-                std::cout << "Press any key to go back to the main menu.";
+                std::cout << "Press any key to return to the main menu.";
                 System::InstantKey();
                 break;
             }

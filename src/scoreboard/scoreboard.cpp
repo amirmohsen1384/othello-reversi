@@ -182,7 +182,7 @@ std::ostream& operator<<(std::ostream &output, const Scoreboard &board)
     }
     Graphics::SetForeground(_default);
 
-    Graphics::DrawSeperator(output, seperator);
+    output << std::string(seperator, '=') << '\n';
 
     // Prints the list of ranked players.
     auto rank = 1;
@@ -202,5 +202,7 @@ std::ostream& operator<<(std::ostream &output, const Scoreboard &board)
     }
 
     Graphics::SetForeground(_default);
+    output << std::string(seperator, '=') << '\n';
+
     return output;
 }

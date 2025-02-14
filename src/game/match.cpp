@@ -302,7 +302,7 @@ void Match::Execute()
     }
 
     // Prompts the player to choose a legal location.
-    std::cout << ':' << ' ' << "Choose your location: " << '\n';
+    std::cout << ':' << ' ' << "Choose your location:" << ' ';
 
     // Obtains a location and validates it.
     std::cin >> index;

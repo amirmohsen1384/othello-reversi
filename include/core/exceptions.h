@@ -106,5 +106,13 @@ public:
     }
 };
 
+// Defines an exception to indicate a timeout.
+class TimeoutException : public std::exception {
+public:
+    virtual const char* what() const noexcept override {
+        return "Your time is up.";
+    }
+};
+
 // Displays the message of an exception.
 void DisplayException(std::exception const &exception);
